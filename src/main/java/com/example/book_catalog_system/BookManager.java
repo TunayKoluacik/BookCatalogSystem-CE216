@@ -81,6 +81,63 @@ List filterResult;
         BookList.put(title,book);
 return book;
     }
+    //client is going to give the title that wants to edit and the parameters that going to be edited we have a generic approach again
+    public void editBook(String title, Object... params) {
+        if (!BookList.containsKey(title)) {
+            throw new IllegalArgumentException("Book with title '" + title + "' does not exist.");
+        }
+
+        Book book = BookList.get(title);
+
+        for (int i = 0; i < params.length; i += 2) {
+            String key = (String) params[i];
+            Object value = params[i + 1];
+            switch (key.toLowerCase()) {
+                case "isbn":
+                    book.setIsbn((String) value);
+                    break;
+                case "title":
+                    book.setTitle((String) value);
+                    break;
+                case "subtitle":
+                    book.setSubtitle((String) value);
+                    break;
+                case "author":
+                    book.setAuthor((String) value);
+                    break;
+                case "translator":
+                    book.setTranslator((String) value);
+                    break;
+                case "publisher":
+                    book.setPublisher((String) value);
+                    break;
+                case "date":
+                    book.setDate((String) value);
+                    break;
+                case "edition":
+                    book.setEdition((String) value);
+                    break;
+                case "tag":
+                    book.setTag((String) value);
+                    break;
+                case "rating":
+                    book.setRating((String) value);
+                    break;
+                case "cover":
+                    book.setCover((String) value);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown parameter: " + key);
+            }
+        }
+    }
+
+
+    // Deletion of book ---> delete from the list, do we delete from programs memory too ?
+    public Book deleteBook(String title){
+        Book x = BookList.remove(title);
+         return x;
+    }
 
 
 }
