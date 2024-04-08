@@ -17,11 +17,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
+//import javax.json.Json;
+//import javax.json.JsonArray;
+//import javax.json.JsonObject;
+//import javax.json.JsonReader;
+//import javax.json.JsonValue;
 
 public class HelloApplication extends Application {
 
@@ -72,29 +72,29 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-        private void saveFile (Stage stage){
-            FileChooser fc = new FileChooser();
-            fc.setTitle("Select file to save!");
-            File f = fc.showSaveDialog(stage); // more to do here…
-        }
-        private void openFile (Stage stage) throws IOException {
-            FileChooser fc = new FileChooser();
-            fc.setTitle("Select file to open!");
-            File f = fc.showOpenDialog(stage); // more to do here…
-            if (f != null) {
-                tunay.setText(Files.readString(f.toPath()));
-            } else {
-                System.out.println("It's null");
-            }
-        }
-
-        private void newFile (Stage stage){
-            FileChooser fc = new FileChooser();
-            fc.setTitle("Select file to save!");
-            File f = fc.showSaveDialog(stage);
-        }
-
-        public static void main (String[]args){
-            launch();
+    private void saveFile (Stage stage){
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Select file to save!");
+        File f = fc.showSaveDialog(stage); // more to do here…
+    }
+    private void openFile (Stage stage) throws IOException {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Select file to open!");
+        File f = fc.showOpenDialog(stage); // more to do here…
+        if (f != null) {
+            tunay.setText(Files.readString(f.toPath()));
+        } else {
+            System.out.println("It's null");
         }
     }
+
+    private void newFile (Stage stage){
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Select file to save!");
+        File f = fc.showSaveDialog(stage);
+    }
+
+    public static void main (String[]args){
+        launch();
+    }
+}
