@@ -7,17 +7,18 @@ import java.util.TreeMap;
 
 public class BookManager {
     // allBooks
-TreeMap<String,Book> BookList = new TreeMap<>();
-// The returned books;
-ObservableList searchResult;
-//- filterResult: A list to store the result of the latest filter query by the user.
-ObservableList filterResult;
+    TreeMap<String, Book> BookList = new TreeMap<>();
+    // The returned books;
+    ObservableList searchResult;
+    //- filterResult: A list to store the result of the latest filter query by the user.
+    ObservableList filterResult;
 
-    private List <String> tags;
+    private List<String> tags;
 
-    BookManager (){
+    BookManager() {
 
     }
+
     public List getTags() {
         return tags;
     }
@@ -26,11 +27,12 @@ ObservableList filterResult;
         this.tags = tags;
     }
 
-// at least client needs to give isbn,title,author,tag
-// When we create a book object the create book class automatically put the book in the BookList
-    // scanner may be used in this function ı need to discuss with my team.
+    /* at least client needs to give isbn,title,author,tag
+ When we create a book object the create book class automatically put the book in the BookList
+     scanner may be used in this function ı need to discuss with my team. */
     public Book createBook(Object... params) {
         if (params.length % 2 != 0) {
+            // keys are the attributes and values are the actual value
             throw new IllegalArgumentException("Parameters must be provided in pairs (key, value).");
         }
 
@@ -43,10 +45,11 @@ ObservableList filterResult;
         String date = null;
         String edition = null;
         String tag = null;
-        String rating = null; // Default rating
+        String rating = null;
         String cover = null;
 
         for (int i = 0; i < params.length; i += 2) {
+            // data type of params array is an Object therefore we need to downcast it to string
             String key = (String) params[i];
             Object value = params[i + 1];
             switch (key.toLowerCase()) {
@@ -87,59 +90,66 @@ ObservableList filterResult;
                     throw new IllegalArgumentException("Unknown parameter: " + key);
             }
         }
-
+// For creating a book object we need at least isbn, title, author, tag
         if (isbn == null || title == null || author == null || tag == null) {
             throw new IllegalArgumentException("At least ISBN, title, author, and tag must be provided.");
         }
 
         Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover);
-        BookList.put(title,book);
-return book;
+        BookList.put(title, book);
+        return book;
     }
-    //client is going to give the title that wants to edit and the parameters that going to be edited we have a generic approach again
-    public void editBook(String title, Object... params) {
-        if (!BookList.containsKey(title)) {
-            throw new IllegalArgumentException("Book with title '" + title + "' does not exist.");
-        }
 
-        Book book = BookList.get(title);
+    //client is going to give the book isbn that needed to be  edited. And then the attribute that is going to change and then the new value
+    // ex:
+    public void editBook(String isbn, Object... params) {
+        Book bookToUpdate = null;
+        for (Book book : BookList.values()) {
+            if (book.getIsbn().equals(isbn)) {
+                bookToUpdate = book;
+                break;
+            }
+        }
+        if (bookToUpdate == null) {
+            throw new IllegalArgumentException("Book with ISBN '" + isbn + "' does not exist.");
+        }
 
         for (int i = 0; i < params.length; i += 2) {
             String key = (String) params[i];
             Object value = params[i + 1];
             switch (key.toLowerCase()) {
                 case "isbn":
-                    book.setIsbn((String) value);
+                    bookToUpdate.setIsbn((String) value);
                     break;
                 case "title":
-                    book.setTitle((String) value);
+                    bookToUpdate.setTitle((String) value);
                     break;
                 case "subtitle":
-                    book.setSubtitle((String) value);
+                    bookToUpdate.setSubtitle((String) value);
                     break;
                 case "author":
-                    book.setAuthor((String) value);
+                    bookToUpdate.setAuthor((String) value);
                     break;
                 case "translator":
-                    book.setTranslator((String) value);
+                    bookToUpdate.setTranslator((String) value);
                     break;
                 case "publisher":
-                    book.setPublisher((String) value);
+                    bookToUpdate.setPublisher((String) value);
                     break;
                 case "date":
-                    book.setDate((String) value);
+                    bookToUpdate.setDate((String) value);
                     break;
                 case "edition":
-                    book.setEdition((String) value);
+                    bookToUpdate.setEdition((String) value);
                     break;
                 case "tag":
-                    book.setTag((String) value);
+                    bookToUpdate.setTag((String) value);
                     break;
                 case "rating":
-                    book.setRating((String) value);
+                    bookToUpdate.setRating((String) value);
                     break;
                 case "cover":
-                    book.setCover((String) value);
+                    bookToUpdate.setCover((String) value);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown parameter: " + key);
@@ -149,18 +159,14 @@ return book;
 
 
     // Deletion of book ---> delete from the list, do we delete from programs memory too ?
-    public Book deleteBook(String title){
+    // and return the deleted book;
+    public Book deleteBook(String title) {
         Book x = BookList.remove(title);
-         return x;
+        return x;
     }
 
 
-
-}
-
-
-
-class Book {
+    class Book {
         private String isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover;
         private boolean isFile, isDeleted;
 
@@ -179,7 +185,8 @@ class Book {
             setRating(rating);
             setCover(cover);
         }
-// constructor with full attributes
+
+        // constructor with full attributes
         public Book(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, String tag, String rating, String cover, boolean isFile, boolean isDeleted) {
             setIsbn(isbn);
             setTitle(title);
@@ -304,5 +311,6 @@ class Book {
             isDeleted = deleted;
         }
     }
+}
 
 
