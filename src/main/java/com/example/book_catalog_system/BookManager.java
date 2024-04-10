@@ -29,80 +29,25 @@ public class BookManager {
 
     /* at least client needs to give isbn,title,author,tag
  When we create a book object the create book class automatically put the book in the BookList
-     scanner may be used in this function ı need to discuss with my team. */
-    public Book createBook(Object... params) {
-        if (params.length % 2 != 0) {
-            // keys are the attributes and values are the actual value
-            throw new IllegalArgumentException("Parameters must be provided in pairs (key, value).");
-        }
+ scanner may be used in this function ı need to discuss with my team.
+ isFile
+ */
+    public Book createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, String tag, String rating, String cover) {
 
-        String isbn = null;
-        String title = null;
-        String subtitle = null;
-        String author = null;
-        String translator = null;
-        String publisher = null;
-        String date = null;
-        String edition = null;
-        String tag = null;
-        String rating = null;
-        String cover = null;
-
-        for (int i = 0; i < params.length; i += 2) {
-            // data type of params array is an Object therefore we need to downcast it to string
-            String key = (String) params[i];
-            Object value = params[i + 1];
-            switch (key.toLowerCase()) {
-                case "isbn":
-                    isbn = (String) value;
-                    break;
-                case "title":
-                    title = (String) value;
-                    break;
-                case "subtitle":
-                    subtitle = (String) value;
-                    break;
-                case "author":
-                    author = (String) value;
-                    break;
-                case "translator":
-                    translator = (String) value;
-                    break;
-                case "publisher":
-                    publisher = (String) value;
-                    break;
-                case "date":
-                    date = (String) value;
-                    break;
-                case "edition":
-                    edition = (String) value;
-                    break;
-                case "tag":
-                    tag = (String) value;
-                    break;
-                case "rating":
-                    rating = (String) value;
-                    break;
-                case "cover":
-                    cover = (String) value;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown parameter: " + key);
-            }
-        }
 // For creating a book object we need at least isbn, title, author, tag
+
+
+        Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover);
         if (isbn == null || title == null || author == null || tag == null) {
             throw new IllegalArgumentException("At least ISBN, title, author, and tag must be provided.");
         }
-
-        Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover);
         BookList.put(title, book);
         return book;
     }
 
     //client is going to give the book isbn that needed to be  edited. And then the attribute that is going to change and then the new value
     // ex:
-    public void editBook(String isbn, Object... params) {
+    public void editBook(String isbn,String attribute, Object... params) {
         Book bookToUpdate = null;
         for (Book book : BookList.values()) {
             if (book.getIsbn().equals(isbn)) {
@@ -114,10 +59,10 @@ public class BookManager {
             throw new IllegalArgumentException("Book with ISBN '" + isbn + "' does not exist.");
         }
 
-        for (int i = 0; i < params.length; i += 2) {
-            String key = (String) params[i];
-            Object value = params[i + 1];
-            switch (key.toLowerCase()) {
+        for (int i = 0; i < params.length; i++) {
+
+            Object value = params[i];
+            switch (attribute.toLowerCase()) {
                 case "isbn":
                     bookToUpdate.setIsbn((String) value);
                     break;
@@ -152,7 +97,7 @@ public class BookManager {
                     bookToUpdate.setCover((String) value);
                     break;
                 default:
-                    throw new IllegalArgumentException("Unknown parameter: " + key);
+                    throw new IllegalArgumentException("Unknown Attribute: " + attribute);
             }
         }
     }
@@ -161,6 +106,7 @@ public class BookManager {
     // Deletion of book ---> delete from the list, do we delete from programs memory too ?
     // and return the deleted book;
     public Book deleteBook(String title) {
+        // Delete the book file
         Book x = BookList.remove(title);
         return x;
     }
@@ -313,5 +259,4 @@ public class BookManager {
         }
     }
 }
-
 
