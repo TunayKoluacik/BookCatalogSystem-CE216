@@ -1,5 +1,7 @@
 package com.example.book_catalog_system;
 
+import javafx.collections.ObservableList;
+
 import java.util.List;
 import java.util.TreeMap;
 
@@ -7,9 +9,22 @@ public class BookManager {
     // allBooks
 TreeMap<String,Book> BookList = new TreeMap<>();
 // The returned books;
-List searchResult;
+ObservableList searchResult;
 //- filterResult: A list to store the result of the latest filter query by the user.
-List filterResult;
+ObservableList filterResult;
+
+    private List <String> tags;
+
+    BookManager (){
+
+    }
+    public List getTags() {
+        return tags;
+    }
+
+    public void setTags(ObservableList tags) {
+        this.tags = tags;
+    }
 
 // at least client needs to give isbn,title,author,tag
 // When we create a book object the create book class automatically put the book in the BookList
@@ -140,11 +155,12 @@ return book;
     }
 
 
+
 }
 
 
 
-       class Book {
+class Book {
         private String isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover;
         private boolean isFile, isDeleted;
 
