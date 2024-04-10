@@ -35,8 +35,7 @@ javafx {
 }
 
 dependencies {
-
-    implementation group: 'javax.json', name: 'javax.json-api', version: '1.0'
+    implementation 'org.json:json:20240303'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }

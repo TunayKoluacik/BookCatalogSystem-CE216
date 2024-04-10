@@ -1,7 +1,7 @@
 module com.example.book_catalog_system {
     requires javafx.controls;
     requires javafx.fxml;
-    requires javax.json.api;
+    requires org.json;
 
 
     opens com.example.book_catalog_system to javafx.fxml;
