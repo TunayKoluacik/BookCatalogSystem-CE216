@@ -6,7 +6,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.skin.TextFieldSkin;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -53,7 +52,7 @@ public class PresentationLayer extends Application {
         SplitMenuButton split = new SplitMenuButton();
 
 
-        // TODO:
+        // TODO: listing the tags
         //        List<String> tags = bManager.getTags();
         //        tags.forEach(tag -> {
         //            CheckMenuItem checkMenuItem = new CheckMenuItem(tag);
@@ -63,6 +62,14 @@ public class PresentationLayer extends Application {
         Button tButton = new Button("Filter");
         Button stButton = new Button("Search and Filter");
         tagBar.getChildren().addAll(tTitle, split, tButton, stButton);
+
+        HBox footerBar = new HBox(10);
+        Button fEdit = new Button("Edit");
+        Button fDelete = new Button("Delete");
+
+        footerBar.getChildren().addAll(fEdit, fDelete);
+        footerBar.setAlignment(Pos.CENTER_RIGHT);
+        footerBar.setPadding(new Insets(10));
 
         mainLayout.setAlignment(Pos.TOP_CENTER);
 
@@ -74,20 +81,27 @@ public class PresentationLayer extends Application {
         //TODO: Help Menu
 
 
+        MenuItem mCreate = new MenuItem("Create");
+        mCreate.setAccelerator(KeyCombination.keyCombination("Ctrl+C"));
+
         MenuItem mImport = new MenuItem("Import");
         mImport.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
 
         MenuItem mExport = new MenuItem("Export");
-        mExport.setAccelerator(KeyCombination.keyCombination("Ctrl+Q"));
+        mExport.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
+
+        MenuItem mAbout = new MenuItem("About");
+        MenuItem mManuel = new MenuItem("Manuel");
 
 
-        mFile.getItems().addAll(mImport, mExport); // add menuitems to file menu
+        mFile.getItems().addAll(mCreate, mImport, mExport); // add menuitems to file menu
+        mHelp.getItems().addAll(mAbout, mManuel);
 
         menu.getMenus().addAll(mFile, mHelp); // add menus to menubar
 
         VBox.setVgrow(tunay, Priority.ALWAYS);
 
-        mainLayout.getChildren().addAll(menu, searchBar, tagBar, tunay);
+        mainLayout.getChildren().addAll(menu, searchBar, tagBar, tunay, footerBar);
         Scene tst = new Scene(mainLayout, 600, 600);
         stage.setTitle("Book Catalog System: Group 9");
         stage.setScene(tst);
