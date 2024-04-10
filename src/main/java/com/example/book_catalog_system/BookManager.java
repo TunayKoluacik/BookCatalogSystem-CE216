@@ -166,7 +166,7 @@ public class BookManager {
     }
 
 
-    class Book {
+    static class Book {
         private String isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover;
         private boolean isFile, isDeleted;
 
@@ -203,8 +203,9 @@ public class BookManager {
             setDeleted(isDeleted);
         }
 
-        ////ISBN, title, author, category, description, and
-        ////price.
+        public Book(){
+
+        }
 
 
         public String getIsbn() {
