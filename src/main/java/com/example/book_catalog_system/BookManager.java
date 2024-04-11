@@ -8,7 +8,7 @@ import java.util.TreeMap;
 
 public class BookManager {
     // allBooks
-    TreeMap<String, Book> BookList = new TreeMap<>();
+    TreeMap<Long, Book> BookList = new TreeMap<>();
     // The returned books;
     ObservableList searchResult;
     //- filterResult: A list to store the result of the latest filter query by the user.
@@ -35,27 +35,24 @@ public class BookManager {
  */
     public Book createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, String tag, String rating, String cover) {
 
-       // For creating a book object we need at least isbn, title, author, tag
-       // create a json file for this book or append it to a file
+        // For creating a book object we need at least isbn, title, author, tag
+        // create a json file for this book or append it to a file
 
         Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover);
         if (isbn == null || title == null || author == null || tag == null) {
             throw new IllegalArgumentException("At least ISBN, title, author, and tag must be provided.");
         }
-        BookList.put(isbn, book);
+        BookList.put(Long.parseLong(isbn), book);
         return book;
     }
 
     //client is going to give the book isbn that needed to be  edited. And then the attribute that is going to change and then the new value
     // ex:
     public void editBook(String isbn,String attribute, Object... params) {
-        Book bookToUpdate = null;
-        for (Book book : BookList.values()) {
-            if (book.getIsbn().equals(isbn)) {
-                bookToUpdate = book;
-                break;
-            }
-        }
+      Book bookToUpdate = null;
+
+      bookToUpdate = BookList.get(Long.parseLong(isbn));
+
         if (bookToUpdate == null) {
             throw new IllegalArgumentException("Book with ISBN '" + isbn + "' does not exist.");
         }
@@ -106,10 +103,19 @@ public class BookManager {
 
     // Deletion of book ---> delete from the list, do we delete from programs memory too ?
     // and return the deleted book;
-    public Book deleteBook(String title) {
-        // Delete the book file
-        Book x = BookList.remove(title);
-        return x;
+    public Book deleteBook(String isbn) {
+        Book bookToRemove = BookList.get(Long.parseLong(isbn));
+
+        // Check if the book exists
+        if (bookToRemove == null) {
+            // Book with the given ISBN does not exist
+            throw new IllegalArgumentException("Book with ISBN '" + isbn + "' does not exist.");
+        } else {
+            // Remove the book from the TreeMap
+            Book removedBook = BookList.remove(Long.parseLong(isbn));
+            return removedBook;
+
+        }
     }
 
 
@@ -260,4 +266,3 @@ public class BookManager {
         }
     }
 }
-
