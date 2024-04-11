@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import java.util.List;
 import java.util.TreeMap;
 
+
 public class BookManager {
     // allBooks
     TreeMap<String, Book> BookList = new TreeMap<>();
@@ -34,14 +35,14 @@ public class BookManager {
  */
     public Book createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, String tag, String rating, String cover) {
 
-// For creating a book object we need at least isbn, title, author, tag
-
+       // For creating a book object we need at least isbn, title, author, tag
+       // create a json file for this book or append it to a file
 
         Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover);
         if (isbn == null || title == null || author == null || tag == null) {
             throw new IllegalArgumentException("At least ISBN, title, author, and tag must be provided.");
         }
-        BookList.put(title, book);
+        BookList.put(isbn, book);
         return book;
     }
 
