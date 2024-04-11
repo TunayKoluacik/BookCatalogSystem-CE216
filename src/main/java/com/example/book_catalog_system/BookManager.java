@@ -98,6 +98,7 @@ public class BookManager {
                     throw new IllegalArgumentException("Unknown Attribute: " + attribute);
             }
         }
+        JsonDataManager.saveBookToJson(bookToUpdate);
     }
 
 

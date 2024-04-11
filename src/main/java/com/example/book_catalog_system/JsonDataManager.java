@@ -9,7 +9,10 @@ import java.io.*;
 public class JsonDataManager {
 
     // Saves the information of the book which is passed as a parameter on to a json file.
-    public static void saveBookToJson(BookManager.Book book, String filename) {
+    public static void saveBookToJson(BookManager.Book book) {
+      String filename=  book.getIsbn();
+      filename+= ".json";
+
         try (Writer writer = new FileWriter(filename)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("isbn", book.getIsbn());
@@ -75,12 +78,14 @@ public class JsonDataManager {
 
 
         // save test
-        saveBookToJson(aras, "aras.json");
-
+      //  saveBookToJson(aras);
+         BookManager bookmanager = new BookManager();
+        bookmanager.BookList.put(1234567890L, aras);
+        bookmanager.editBook("1234567890","author","");
         // read test
-        BookManager.Book book = readBooksFromJson("aras.json");
+        BookManager.Book book = readBooksFromJson("1234567890.json");
         // reads correctly as seen
-        System.out.println(book.getAuthor());
+       System.out.println(book.getAuthor());
         System.out.println(book.getTitle());
     }
 }
