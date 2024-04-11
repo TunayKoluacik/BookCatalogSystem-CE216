@@ -2,8 +2,10 @@ package com.example.book_catalog_system;
 
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+
 
 
 public class BookManager {
@@ -35,13 +37,9 @@ public class BookManager {
  */
     public Book createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, String tag, String rating, String cover) {
 
-        // For creating a book object we need at least isbn, title, author, tag
-        // create a json file for this book or append it to a file
 
         Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover);
-        if (isbn == null || title == null || author == null || tag == null) {
-            throw new IllegalArgumentException("At least ISBN, title, author, and tag must be provided.");
-        }
+        JsonDataManager.saveBookToJson(book);
         BookList.put(Long.parseLong(isbn), book);
         return book;
     }
@@ -114,6 +112,7 @@ public class BookManager {
         } else {
             // Remove the book from the TreeMap
             Book removedBook = BookList.remove(Long.parseLong(isbn));
+            JsonDataManager.deleteJson(bookToRemove.getIsbn());
             return removedBook;
 
         }
@@ -265,5 +264,7 @@ public class BookManager {
         public void setDeleted(boolean deleted) {
             isDeleted = deleted;
         }
+
+
     }
 }

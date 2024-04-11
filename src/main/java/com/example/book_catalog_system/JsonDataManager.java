@@ -36,7 +36,8 @@ public class JsonDataManager {
         }
     }
     //Simply deletes the given file
-    public static void deleteFile(String filename){
+    public static void deleteJson(String filename){
+        filename += ".json";
         File myObj = new File(filename);
         if (myObj.delete()) {
             System.out.println("Deleted the file: " + myObj.getName());
@@ -82,6 +83,13 @@ public class JsonDataManager {
          BookManager bookmanager = new BookManager();
         bookmanager.BookList.put(1234567890L, aras);
         bookmanager.editBook("1234567890","author","");
+        // create test
+        bookmanager.createBook("1234545640", "ege", "akın", "Author",
+               "Translator", "Publisher", "za", "First Edition",
+                "Tag", "Rating", "Cover Image URL");
+        bookmanager.deleteBook("1234545640");
+        deleteJson("1234567890");
+        //
         // read test
         BookManager.Book book = readBooksFromJson("1234567890.json");
         // reads correctly as seen
