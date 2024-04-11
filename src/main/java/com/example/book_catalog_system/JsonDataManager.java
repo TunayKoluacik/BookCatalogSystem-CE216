@@ -10,6 +10,9 @@ import java.util.List;
 public class JsonDataManager {
 
     // Method to save a list of books to a JSON file
+    // TODO : WRITE TO A JSON FİLE
+
+    // TODO : REMOVE JSON FILE
     public static void saveBooksToJson(List<BookManager.Book> books, String filename) {
         JSONArray jsonArray = new JSONArray();
         for (BookManager.Book book : books) {
