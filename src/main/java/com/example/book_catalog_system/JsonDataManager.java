@@ -104,7 +104,7 @@ public class JsonDataManager {
                 "Tag", "Rating", "Cover Image URL"), "aras.json");
 
         // Read books from JSON file
-        BookManager.Book book = readBooksFromJson("books.json");
-        System.out.println(book.getAuthor());
+        //BookManager.Book book = readBooksFromJson("books.json");
+        System.out.println(books.get(0));
     }
 }
