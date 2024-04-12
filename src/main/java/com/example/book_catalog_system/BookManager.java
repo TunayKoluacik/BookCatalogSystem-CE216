@@ -3,6 +3,7 @@ package com.example.book_catalog_system;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -16,7 +17,7 @@ public class BookManager {
     //- filterResult: A list to store the result of the latest filter query by the user.
     ObservableList filterResult;
 
-    private List<String> tags;
+    private static List<String> tags;
 
     BookManager() {
 
@@ -35,10 +36,10 @@ public class BookManager {
  scanner may be used in this function ı need to discuss with my team.
  isFile
  */
-    public Book createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, String tag, String rating, String cover) {
+    public Book createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
 
 
-        Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover);
+        Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover);
         JsonDataManager.saveBookToJson(book);
         BookList.put(Long.parseLong(isbn), book);
         return book;
@@ -47,9 +48,9 @@ public class BookManager {
     //client is going to give the book isbn that needed to be  edited. And then the attribute that is going to change and then the new value
     // ex:
     public void editBook(String isbn,String attribute, Object... params) {
-      Book bookToUpdate = null;
+        Book bookToUpdate = null;
 
-      bookToUpdate = BookList.get(Long.parseLong(isbn));
+        bookToUpdate = BookList.get(Long.parseLong(isbn));
 
         if (bookToUpdate == null) {
             throw new IllegalArgumentException("Book with ISBN '" + isbn + "' does not exist.");
@@ -84,7 +85,7 @@ public class BookManager {
                     bookToUpdate.setEdition((String) value);
                     break;
                 case "tag":
-                    bookToUpdate.setTag((String) value);
+                    bookToUpdate.setTags(Collections.singletonList((String) value));
                     break;
                 case "rating":
                     bookToUpdate.setRating((String) value);
@@ -118,14 +119,37 @@ public class BookManager {
         }
     }
 
+    public List<String> listingTags(List<BookManager.Book> books){
+        List<String> allTags = new ArrayList<>();
+        for (BookManager.Book book : books) {
+            List<String> tags = book.getTags();
+            for (String tag : tags) {
+                if (!allTags.contains(tag)) {
+                    allTags.add(tag);
+                }
+            }
+        }
+        return allTags;
+    }
+    //
+    public List<BookManager.Book> filterByTag(List<String> tags) {
+        filterResult = (ObservableList) new ArrayList<>();
+        for (BookManager.Book book : BookList.values()) {
+            if(book.getTags().containsAll(tags)) {
+                filterResult.add(book);
+            }
+        }
+        return filterResult;
+    }
 
     static class Book {
-        private String isbn, title, subtitle, author, translator, publisher, date, edition, tag, rating, cover;
+        private String isbn, title, subtitle, author, translator, publisher, date, edition, rating, cover;
         private boolean isFile, isDeleted;
+        private List<String> tags;
 
         //constructor without parameters isFile and İsDeleted
 
-        public Book(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, String tag, String rating, String cover) {
+        public Book(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
             setIsbn(isbn);
             setTitle(title);
             setSubtitle(subtitle);
@@ -134,13 +158,13 @@ public class BookManager {
             setPublisher(publisher);
             setDate(date);
             setEdition(edition);
-            setTag(tag);
+            setTags(tags);
             setRating(rating);
             setCover(cover);
         }
 
         // constructor with full attributes
-        public Book(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, String tag, String rating, String cover, boolean isFile, boolean isDeleted) {
+        public Book(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover, boolean isFile, boolean isDeleted) {
             setIsbn(isbn);
             setTitle(title);
             setSubtitle(subtitle);
@@ -149,7 +173,7 @@ public class BookManager {
             setPublisher(publisher);
             setDate(date);
             setEdition(edition);
-            setTag(tag);
+            setTags(tags);
             setRating(rating);
             setCover(cover);
             setFile(isFile);
@@ -225,12 +249,12 @@ public class BookManager {
             this.edition = edition;
         }
 
-        public String getTag() {
-            return tag;
+        public List<String> getTags() {
+            return tags;
         }
 
-        public void setTag(String tag) {
-            this.tag = tag;
+        public void setTags(List<String> tags) {
+            this.tags = tags;
         }
 
         public String getRating() {
