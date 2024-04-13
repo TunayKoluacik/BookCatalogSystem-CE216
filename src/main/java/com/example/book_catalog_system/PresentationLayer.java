@@ -10,19 +10,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
-
-
-
-import com.example.book_catalog_system.BookManager.*;
-
 
 public class PresentationLayer extends Application {
 
 
-    ListView<Book> tunay = new ListView<>();
+    ListView<BookManager.Book> tunay = new ListView<>();
     @Override
     public void start (Stage stage) throws Exception {
 
@@ -48,7 +47,6 @@ public class PresentationLayer extends Application {
         SplitMenuButton split = new SplitMenuButton();
 
 
-        // TODO: listing the tags
         List<String> tags = bManager.listingTags();
         tags.forEach(tag -> {
             CheckMenuItem checkMenuItem = new CheckMenuItem(tag);
@@ -82,6 +80,14 @@ public class PresentationLayer extends Application {
 
         MenuItem mImport = new MenuItem("Import");
         mImport.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
+        mImport.setOnAction(e -> {
+            try {
+                openFile(stage);
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
 
         MenuItem mExport = new MenuItem("Export");
         mExport.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
@@ -103,6 +109,17 @@ public class PresentationLayer extends Application {
         stage.setScene(tst);
         stage.show();
 
+    }
+
+    private void openFile(Stage stage) throws IOException {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Select file to open!");
+        File f = fc.showOpenDialog(stage); // more to do here…
+        if (f != null) {
+
+        } else {
+            System.out.println("It's null");
+        }
     }
 
     public static void main (String[]args){

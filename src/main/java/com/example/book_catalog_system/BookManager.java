@@ -2,6 +2,8 @@ package com.example.book_catalog_system;
 
 import javafx.collections.ObservableList;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -165,7 +167,11 @@ public class BookManager {
             setEdition(edition);
             setTags(tags);
             setRating(rating);
-            setCover(cover);
+            File f = new File(cover);
+            //TODO check for a bug
+            if (f == null) {
+                setCover("null");
+            } else setCover(cover);
         }
 
         // constructor with full attributes
@@ -180,6 +186,7 @@ public class BookManager {
             setEdition(edition);
             setTags(tags);
             setRating(rating);
+
             setCover(cover);
             setFile(isFile);
             setDeleted(isDeleted);
