@@ -79,7 +79,75 @@ public class JsonDataManager {
         return null;
     }
 
+    // Export a single book to a JSON file
+    public static void exportBookToJson(BookManager.Book book) {
 
+        String filename=  book.getIsbn();
+        filename+= ".json";
+
+        try (Writer writer = new FileWriter(filename)) {
+            JSONObject jsonObject = createJSONObject(book);
+            writer.write(jsonObject.toString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Failed export from json" + filename);
+        }
+    }
+
+    // Import a single book from a JSON file
+    public static BookManager.Book importBookFromJson(String filename) {
+
+        try (Reader reader = new FileReader(filename)) {
+            JSONObject jsonObject = new JSONObject(new JSONTokener(reader));
+            return createBookFromJSONObject(jsonObject);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Failed import from book" + filename);
+        }
+        return null;
+    }
+
+    // creates a json with the book object
+    private static JSONObject createJSONObject(BookManager.Book book) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("isbn", book.getIsbn());
+        jsonObject.put("title", book.getTitle());
+        jsonObject.put("subtitle", book.getSubtitle());
+        jsonObject.put("author", book.getAuthor());
+        jsonObject.put("translator", book.getTranslator());
+        jsonObject.put("publisher", book.getPublisher());
+        jsonObject.put("date", book.getDate());
+        jsonObject.put("edition", book.getEdition());
+        jsonObject.put("tags", new JSONArray(book.getTags()));
+        jsonObject.put("rating", book.getRating());
+        jsonObject.put("cover", book.getCover());
+        return jsonObject;
+    }
+
+    // CREATES A BOOK OBJECT WITH THE .JSON FILE
+    private static BookManager.Book createBookFromJSONObject(JSONObject jsonObject) {
+        BookManager.Book book = new BookManager.Book();
+        book.setIsbn(jsonObject.getString("isbn"));
+        book.setTitle(jsonObject.getString("title"));
+        book.setSubtitle(jsonObject.optString("subtitle", ""));
+        book.setAuthor(jsonObject.getString("author"));
+        book.setTranslator(jsonObject.optString("translator", ""));
+        book.setPublisher(jsonObject.optString("publisher", ""));
+        book.setDate(jsonObject.optString("date", ""));
+        book.setEdition(jsonObject.optString("edition", ""));
+        List<String> tags = new ArrayList<>();
+        JSONArray tagsArray = jsonObject.getJSONArray("tags");
+        for (int i = 0; i < tagsArray.length(); i++) {
+            tags.add(tagsArray.getString(i));
+        }
+        book.setTags(tags);
+        book.setRating(jsonObject.optString("rating", ""));
+        book.setCover(jsonObject.optString("cover", ""));
+        return book;
+    }
+
+    //lots of unorganized tests......
     public static void main(String[] args) {
         //initializing a book to use in the functions
         BookManager.Book aras = new BookManager.Book("1234567890", "zo", "Subtitle", "Author",
@@ -106,6 +174,10 @@ public class JsonDataManager {
         //
         // read test
         BookManager.Book book = readBooksFromJson("1234567890.json");
+
+        createJSONObject(book);
+
+        createBookFromJSONObject(createJSONObject(aras));
         // reads correctly as seen
         System.out.println(book.getAuthor());
         System.out.println(book.getTitle());
