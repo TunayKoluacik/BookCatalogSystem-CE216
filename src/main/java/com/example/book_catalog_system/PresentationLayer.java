@@ -1,7 +1,6 @@
 package com.example.book_catalog_system;
 
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,12 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 
 
@@ -26,11 +21,12 @@ import com.example.book_catalog_system.BookManager.*;
 
 public class PresentationLayer extends Application {
 
-    BookManager bManager = new BookManager();
+
     ListView<Book> tunay = new ListView<>();
     @Override
     public void start (Stage stage) throws Exception {
 
+        BookManager bManager = new BookManager();
         VBox mainLayout = new VBox();
 
         HBox searchBar = new HBox(10);
@@ -53,11 +49,11 @@ public class PresentationLayer extends Application {
 
 
         // TODO: listing the tags
-        //        List<String> tags = bManager.getTags();
-        //        tags.forEach(tag -> {
-        //            CheckMenuItem checkMenuItem = new CheckMenuItem(tag);
-        //            split.getItems().add(checkMenuItem);
-        //        });
+        List<String> tags = bManager.listingTags();
+        tags.forEach(tag -> {
+            CheckMenuItem checkMenuItem = new CheckMenuItem(tag);
+            split.getItems().add(checkMenuItem);
+        });
 
         Button tButton = new Button("Filter");
         Button stButton = new Button("Search and Filter");
@@ -110,6 +106,7 @@ public class PresentationLayer extends Application {
     }
 
     public static void main (String[]args){
+
         launch();
     }
 }

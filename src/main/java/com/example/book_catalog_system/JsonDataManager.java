@@ -110,6 +110,6 @@ public class JsonDataManager {
         System.out.println(book.getAuthor());
         System.out.println(book.getTitle());
         List<BookManager.Book> bookList = new ArrayList<>(bookmanager.BookList.values());
-        System.out.println(bookmanager.listingTags(bookList));
+        System.out.println(bookmanager.listingTags());
     }
 }

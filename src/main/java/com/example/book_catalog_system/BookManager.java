@@ -119,9 +119,9 @@ public class BookManager {
         }
     }
 
-    public List<String> listingTags(List<BookManager.Book> books){
+    public List<String> listingTags(){
         List<String> allTags = new ArrayList<>();
-        for (BookManager.Book book : books) {
+        for (BookManager.Book book : BookList.values()) {
             List<String> tags = book.getTags();
             for (String tag : tags) {
                 if (!allTags.contains(tag)) {
