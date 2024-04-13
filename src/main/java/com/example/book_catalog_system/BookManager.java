@@ -42,6 +42,11 @@ public class BookManager {
         Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover);
         JsonDataManager.saveBookToJson(book);
         BookList.put(Long.parseLong(isbn), book);
+        for(String tag : book.tags){
+            if(!tags.contains(tag)){
+                tags.add(tag);
+            }
+        }
         return book;
     }
 
