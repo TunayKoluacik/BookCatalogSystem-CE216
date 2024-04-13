@@ -93,8 +93,8 @@ public class BookManager {
                 case "cover":
                     bookToUpdate.setCover((String) value);
                     break;
-                default:
-                    throw new IllegalArgumentException("Unknown Attribute: " + attribute);
+
+
             }
         }
         JsonDataManager.saveBookToJson(bookToUpdate);
