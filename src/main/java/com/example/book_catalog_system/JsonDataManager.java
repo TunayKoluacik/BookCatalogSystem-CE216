@@ -1,17 +1,21 @@
 package com.example.book_catalog_system;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class JsonDataManager {
 
     // Saves the information of the book which is passed as a parameter on to a json file.
     public static void saveBookToJson(BookManager.Book book) {
-      String filename=  book.getIsbn();
-      filename+= ".json";
+        String filename=  book.getIsbn();
+        filename+= ".json";
 
         try (Writer writer = new FileWriter(filename)) {
             JSONObject jsonObject = new JSONObject();
@@ -23,7 +27,7 @@ public class JsonDataManager {
             jsonObject.put("publisher", book.getPublisher());
             jsonObject.put("date", book.getDate());
             jsonObject.put("edition", book.getEdition());
-            jsonObject.put("tag", book.getTag());
+            jsonObject.put("tags", book.getTags());
             jsonObject.put("rating", book.getRating());
             jsonObject.put("cover", book.getCover());
 
@@ -59,7 +63,12 @@ public class JsonDataManager {
             book.setPublisher(jsonObject.getString("publisher"));
             book.setDate(jsonObject.getString("date"));
             book.setEdition(jsonObject.getString("edition"));
-            book.setTag(jsonObject.getString("tag"));
+            JSONArray tagsArray = jsonObject.getJSONArray("tags");
+            List<String> tags = new ArrayList<>();
+            for (int i = 0; i < tagsArray.length(); i++) {
+                tags.add(tagsArray.getString(i));
+            }
+            book.setTags(tags);
             book.setRating(jsonObject.getString("rating"));
             book.setCover(jsonObject.getString("cover"));
             return book;
@@ -75,25 +84,32 @@ public class JsonDataManager {
         //initializing a book to use in the functions
         BookManager.Book aras = new BookManager.Book("1234567890", "zo", "Subtitle", "Author",
                 "Translator", "Publisher", "za", "First Edition",
-                "Tag", "Rating", "Cover Image URL");
+                List.of("Tag1"), "Rating", "Cover Image URL");
 
 
         // save test
-      //  saveBookToJson(aras);
-         BookManager bookmanager = new BookManager();
+        //  saveBookToJson(aras);
+        BookManager bookmanager = new BookManager();
         bookmanager.BookList.put(1234567890L, aras);
         bookmanager.editBook("1234567890","author","");
         // create test
-        bookmanager.createBook("1234545640", "ege", "akın", "Author",
-               "Translator", "Publisher", "za", "First Edition",
-                "Tag", "Rating", "Cover Image URL");
+        bookmanager.createBook("1234545640", "ege", "akın", "A1",
+                "Translator1", "Publisher", "za", "First Edition", List.of("Tag1", "Tag2"), "2", "Cover Image URL");
+        bookmanager.createBook("1234545641", "gizem", "akcay", "A2",
+                "Translator1", "Publisher", "za", "Second Edition",
+                List.of("Tag2", "Tag3"), "3", "Cover Image URL");
+        bookmanager.createBook("1234545642", "aras", "firat", "A1",
+                "Translator2", "Publisher", "za", "Fifth Edition",
+                List.of("Tag1", "Tag3"), "4", "Cover Image URL");
+
         bookmanager.deleteBook("1234545640");
-        deleteJson("1234567890");
         //
         // read test
         BookManager.Book book = readBooksFromJson("1234567890.json");
         // reads correctly as seen
-       System.out.println(book.getAuthor());
+        System.out.println(book.getAuthor());
         System.out.println(book.getTitle());
+        List<BookManager.Book> bookList = new ArrayList<>(bookmanager.BookList.values());
+        System.out.println(bookmanager.listingTags(bookList));
     }
 }
