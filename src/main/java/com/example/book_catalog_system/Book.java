@@ -1,12 +1,15 @@
 package com.example.book_catalog_system;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.File;
 import java.util.List;
 
-public class Book {
+public class Book{
     private String isbn, title, subtitle, author, translator, publisher, date, edition, rating, cover;
 
-    private List<String> tags;
+    private ObservableList<String> tags;
 
 
     public Book(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
@@ -18,11 +21,11 @@ public class Book {
         setPublisher(publisher);
         setDate(date);
         setEdition(edition);
-        setTags(tags);
+        ObservableList<String> cnvrt = FXCollections.observableList(tags);
+        setTags(cnvrt);
         setRating(rating);
         File f = new File(cover);
-        //TODO check for a bug
-        if (f == null) {
+        if (!f.exists()) {
             setCover("null");
         } else setCover(cover);
     }
@@ -30,7 +33,6 @@ public class Book {
 
 
     public Book(){
-
     }
 
 
@@ -98,11 +100,11 @@ public class Book {
         this.edition = edition;
     }
 
-    public List<String> getTags() {
+    public ObservableList<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(ObservableList<String> tags) {
         this.tags = tags;
     }
 

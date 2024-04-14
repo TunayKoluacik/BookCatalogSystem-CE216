@@ -1,5 +1,7 @@
 package com.example.book_catalog_system;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -16,6 +18,11 @@ public class JsonDataManager {
     // Saves the information of the book which is passed as a parameter on to a json file.
 
     static File dir = new File("./jsonFiles");
+
+    public JsonDataManager() {
+        BootingUp();
+    }
+
     public static void BootingUp(){
         if (!dir.exists()) {
             // Create the directory
@@ -86,7 +93,8 @@ public class JsonDataManager {
             for (int i = 0; i < tagsArray.length(); i++) {
                 tags.add(tagsArray.getString(i));
             }
-            book.setTags(tags);
+            ObservableList<String> cnvrt = FXCollections.observableList(tags);
+            book.setTags(cnvrt);
             book.setRating(jsonObject.getString("rating"));
             book.setCover(jsonObject.getString("cover"));
             return book;
@@ -159,7 +167,8 @@ public class JsonDataManager {
         for (int i = 0; i < tagsArray.length(); i++) {
             tags.add(tagsArray.getString(i));
         }
-        book.setTags(tags);
+        ObservableList<String> cnvrt = FXCollections.observableList(tags);
+        book.setTags(cnvrt);
         book.setRating(jsonObject.optString("rating", ""));
         book.setCover(jsonObject.optString("cover", ""));
         return book;
@@ -201,7 +210,6 @@ public class JsonDataManager {
 
         System.out.println(test.get(Long.parseLong(aras.getIsbn())).getAuthor());
         System.out.println(book.getTitle());
-        List<Book> bookList = new ArrayList<>(bookmanager.getBookList().values());
         System.out.println(bookmanager.listingTags());
 
         System.out.println(dir.getAbsolutePath());

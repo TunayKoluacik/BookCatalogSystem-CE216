@@ -2,6 +2,7 @@ package com.example.book_catalog_system;
 
 
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.File;
@@ -12,7 +13,7 @@ import java.util.TreeMap;
 
 
 
-public class BookManager {
+public class BookManager{
 
     private TreeMap<Long, Book> BookList = new TreeMap<>();
 
@@ -22,6 +23,16 @@ public class BookManager {
 
     public TreeMap<Long, Book> getBookList() {
         return BookList;
+    }
+
+    public ObservableList<Book> OgetBookList() {
+
+        ArrayList<String> valueList = new ArrayList<String>();
+        for (Book value : getBookList().values()) {
+            valueList.add(value.getTitle());
+        }
+
+        return FXCollections.observableList((List<Book>) getBookList().values());
     }
 
     public void setBookList(TreeMap<Long, Book> bookList) {
@@ -51,8 +62,14 @@ public class BookManager {
 
     private static ObservableList<String> tags;
 
-    public BookManager() {
+    public JsonDataManager getDataManager() {
+        return dataManager;
+    }
 
+    private JsonDataManager dataManager;
+
+    public BookManager() {
+        JsonDataManager dataManager = new JsonDataManager();
     }
 
     public ObservableList<String> getTags() {
@@ -121,7 +138,8 @@ public class BookManager {
                     bookToUpdate.setEdition((String) value);
                     break;
                 case "tag":
-                    bookToUpdate.setTags(Collections.singletonList((String) value));
+                    ObservableList<String> cnvrt = FXCollections.observableList(Collections.singletonList((String) value));
+                    bookToUpdate.setTags(cnvrt);
                     break;
                 case "rating":
                     bookToUpdate.setRating((String) value);

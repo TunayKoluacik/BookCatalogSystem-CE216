@@ -13,19 +13,18 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 public class PresentationLayer extends Application {
-
-
     public static BookManager bookmanager = new BookManager();
     ListView<Book> tunay = new ListView<>();
     @Override
     public void start (Stage stage) throws Exception {
 
         VBox mainLayout = new VBox();
+
+        tunay.setItems(bookmanager.OgetBookList());
 
         HBox searchBar = new HBox(10);
 
@@ -72,7 +71,11 @@ public class PresentationLayer extends Application {
         });
         Button fEdit = new Button("Edit");
         fEdit.setOnAction(e-> {
-            //TODO editing book funciton
+            try {
+                GUIeditBook(tunay.getSelectionModel().getSelectedItem());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
         Button fDelete = new Button("Delete");
         fDelete.setOnAction(e-> {
@@ -235,14 +238,166 @@ public class PresentationLayer extends Application {
         HBox.setHgrow(tCover, Priority.ALWAYS);
         cover.getChildren().addAll(lCover, tCover);
 
+        HBox cButtons = new HBox(10);
+        Button csCreate = new Button("Create");
+        csCreate.setOnAction(e -> {
+            String temp = tTags.getText();
+            List<String> temptags = List.of(temp.split(","));
+            bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
+        });
+        Button csCancel = new Button("Cancel");
+        csCancel.setOnAction(e-> {
+            //TODO editing book funciton
+        });
+
+        cButtons.getChildren().addAll(csCreate, csCancel);
+
+        cButtons.setAlignment(Pos.CENTER_RIGHT);
+
+        Region filler = new Region();
+        VBox.setVgrow(filler, Priority.ALWAYS);
 
         vertical.setAlignment(Pos.TOP_CENTER);
-        vertical.getChildren().addAll(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover);
+        vertical.getChildren().addAll(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover, filler, cButtons);
         vertical.setPadding(new Insets(10));
 
         Scene createScene = new Scene(vertical, 300, 500);
         createStage.setScene(createScene);
         createStage.showAndWait();
+    }
+
+    private void GUIeditBook(Book book) throws IOException {
+        Stage editStage = new Stage();
+
+        VBox vertical = new VBox( 10);
+
+        double wid = 65;
+
+        HBox isbn = new HBox(10);
+        Label lIsbn = new Label("ISBN: ");
+        lIsbn.setAlignment(Pos.CENTER_LEFT);
+        lIsbn.setMinWidth(wid);
+        TextField tIsbn = new TextField(book.getIsbn());
+        tIsbn.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tIsbn, Priority.ALWAYS);
+        isbn.getChildren().addAll(lIsbn, tIsbn);
+
+        HBox title = new HBox(10);
+        Label lTitle = new Label("Title: ");
+        lTitle.setAlignment(Pos.CENTER_LEFT);
+        lTitle.setMinWidth(wid);
+        TextField tTitle = new TextField(book.getTitle());
+        tTitle.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tTitle, Priority.ALWAYS);
+        title.getChildren().addAll(lTitle, tTitle);
+
+        HBox subtitle = new HBox(10);
+        Label lSubtitle = new Label("Subtitle: ");
+        lSubtitle.setAlignment(Pos.CENTER_LEFT);
+        lSubtitle.setMinWidth(wid);
+        TextField tSubtitle = new TextField(book.getSubtitle());
+        tSubtitle.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tSubtitle, Priority.ALWAYS);
+        subtitle.getChildren().addAll(lSubtitle, tSubtitle);
+
+        HBox author = new HBox(10);
+        Label lAuthor = new Label("Author: ");
+        lAuthor.setAlignment(Pos.CENTER_LEFT);
+        lAuthor.setMinWidth(wid);
+        TextField tAuthor = new TextField(book.getAuthor());
+        tAuthor.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tAuthor, Priority.ALWAYS);
+        author.getChildren().addAll(lAuthor, tAuthor);
+
+        HBox translator = new HBox(10);
+        Label lTranslator = new Label("Translator: ");
+        lTranslator.setAlignment(Pos.CENTER_LEFT);
+        lTranslator.setMinWidth(wid);
+        TextField tTranslator = new TextField(book.getTranslator());
+        tTranslator.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tTranslator, Priority.ALWAYS);
+        translator.getChildren().addAll(lTranslator, tTranslator);
+
+        HBox publisher = new HBox(10);
+        Label lPublisher = new Label("Publisher: ");
+        lPublisher.setAlignment(Pos.CENTER_LEFT);
+        lPublisher.setMinWidth(wid);
+        TextField tPublisher = new TextField(book.getPublisher());
+        tPublisher.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tPublisher, Priority.ALWAYS);
+        publisher.getChildren().addAll(lPublisher, tPublisher);
+
+        HBox date = new HBox(10);
+        Label lDate = new Label("Date: ");
+        lDate.setAlignment(Pos.CENTER_LEFT);
+        lDate.setMinWidth(wid);
+        TextField tDate = new TextField(book.getDate());
+        tDate.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tDate, Priority.ALWAYS);
+        date.getChildren().addAll(lDate, tDate);
+
+        HBox edition = new HBox(10);
+        Label lEdition = new Label("Edition: ");
+        lEdition.setAlignment(Pos.CENTER_LEFT);
+        lEdition.setMinWidth(wid);
+        TextField tEdition = new TextField(book.getEdition());
+        tEdition.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tEdition, Priority.ALWAYS);
+        edition.getChildren().addAll(lEdition, tEdition);
+
+        HBox tags = new HBox(10);
+        Label lTags = new Label("Tags: ");
+        lTags.setAlignment(Pos.CENTER_LEFT);
+        lTags.setMinWidth(wid);
+        TextField tTags = new TextField(book.getTags().toString());
+        tTags.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tTags, Priority.ALWAYS);
+        tags.getChildren().addAll(lTags, tTags);
+
+        HBox rating = new HBox(10);
+        Label lRating = new Label("Rating: ");
+        lRating.setAlignment(Pos.CENTER_LEFT);
+        lRating.setMinWidth(wid);
+        TextField tRating = new TextField(book.getRating());
+        tRating.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tRating, Priority.ALWAYS);
+        rating.getChildren().addAll(lRating, tRating);
+
+        HBox cover = new HBox(10);
+        Label lCover = new Label("Cover: ");
+        lCover.setAlignment(Pos.CENTER_LEFT);
+        lCover.setMinWidth(wid);
+        TextField tCover = new TextField(book.getCover());
+        tCover.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tCover, Priority.ALWAYS);
+        cover.getChildren().addAll(lCover, tCover);
+
+        HBox cButtons = new HBox(10);
+        Button csCreate = new Button("Create");
+        csCreate.setOnAction(e -> {
+            String temp = tTags.getText();
+            List<String> temptags = List.of(temp.split(","));
+            bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
+        });
+        Button csCancel = new Button("Cancel");
+        csCancel.setOnAction(e-> {
+            //TODO editing book funciton
+        });
+
+        cButtons.getChildren().addAll(csCreate, csCancel);
+
+        cButtons.setAlignment(Pos.CENTER_RIGHT);
+
+        Region filler = new Region();
+        VBox.setVgrow(filler, Priority.ALWAYS);
+
+        vertical.setAlignment(Pos.TOP_CENTER);
+        vertical.getChildren().addAll(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover, filler, cButtons);
+        vertical.setPadding(new Insets(10));
+
+        Scene createScene = new Scene(vertical, 300, 500);
+        editStage.setScene(createScene);
+        editStage.showAndWait();
     }
 
     public static void main (String[]args){
@@ -256,7 +411,6 @@ public class PresentationLayer extends Application {
                 "Translator2", "Publisher", "za", "Fifth Edition",
                 List.of("Tag1", "Tag3"), "4", "Cover Image URL");
 
-        File dir = new File("");
 
         bookmanager.listingTags();
         launch();
