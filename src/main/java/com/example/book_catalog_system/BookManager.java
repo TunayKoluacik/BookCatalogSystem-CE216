@@ -13,9 +13,9 @@ public class BookManager{
 
     private TreeMap<Long, Book> BookList = new TreeMap<>();
 
-    private ObservableList<Book> searchResult;
+    private ObservableList<Book> searchResult = FXCollections.observableArrayList();
     //- filterResult: A list to store the result of the latest filter query by the user.
-    private ObservableList<Book> filterResult;
+    private ObservableList<Book> filterResult = FXCollections.observableArrayList();
 
     public TreeMap<Long, Book> getBookList() {
         return BookList;
@@ -23,12 +23,10 @@ public class BookManager{
 
     public ObservableList<Book> OgetBookList() {
 
-        ArrayList<String> valueList = new ArrayList<String>();
-        for (Book value : getBookList().values()) {
-            valueList.add(value.getTitle());
-        }
+        ArrayList<Book> valueList = new ArrayList<Book>();
+        valueList.addAll(getBookList().values());
 
-        return FXCollections.observableList((List<Book>) getBookList().values());
+        return FXCollections.observableList(valueList);
     }
 
     public void setBookList(TreeMap<Long, Book> bookList) {
@@ -142,6 +140,11 @@ if(BookList.get(Long.parseLong(isbn)) == null){
                     break;
                 case "tag":
                     ObservableList<String> cnvrt = FXCollections.observableList(Collections.singletonList((String) value));
+                    for(String tag : bookToUpdate.getTags()){
+                        if(!tags.contains(tag)){
+                            tags.add(tag);
+                        }
+                    }
                     bookToUpdate.setTags(cnvrt);
                     break;
                 case "rating":
@@ -188,8 +191,8 @@ if(BookList.get(Long.parseLong(isbn)) == null){
         return allTags;
     }
     //
-    public ObservableList<Book> filterByTag(ObservableList<String> tags) {
-        filterResult.removeAll();
+    public ObservableList<Book> filterByTag(List<String> tags) {
+        filterResult.clear();
         for (Book book : BookList.values()) {
             if(book.getTags().containsAll(tags)) {
                 filterResult.add(book);
