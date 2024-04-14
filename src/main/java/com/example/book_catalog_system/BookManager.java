@@ -6,11 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
-
+import java.util.*;
 
 
 public class BookManager{
@@ -85,6 +81,13 @@ public class BookManager{
  scanner may be used in this function ı need to discuss with my team.
  isFile
  */
+    public Book SearchBook(String isbn){
+if(BookList.get(Long.parseLong(isbn)) == null){
+    throw new NoSuchElementException("Book with ISBN " + isbn + " not found");
+}else return BookList.get(Long.parseLong(isbn));
+
+
+    }
     public void createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
 
 
