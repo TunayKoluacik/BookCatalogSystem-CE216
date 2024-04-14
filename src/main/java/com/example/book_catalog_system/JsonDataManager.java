@@ -13,6 +13,23 @@ import java.util.List;
 public class JsonDataManager {
 
     // Saves the information of the book which is passed as a parameter on to a json file.
+
+    static File dir = new File("./jsonFiles");
+    public static void BootingUp(){
+        if (!dir.exists()) {
+            // Create the directory
+            boolean result = dir.mkdir();
+
+            if(result) {
+                System.out.println("Directory created successfully");
+            } else {
+                System.out.println("Failed to create directory");
+            }
+        } else {
+            System.out.println("Directory already exists");
+        }
+    }
+
     public static void saveBookToJson(BookManager.Book book) {
         String filename=  book.getIsbn();
         filename+= ".json";
@@ -183,5 +200,8 @@ public class JsonDataManager {
         System.out.println(book.getTitle());
         List<BookManager.Book> bookList = new ArrayList<>(bookmanager.BookList.values());
         System.out.println(bookmanager.listingTags());
+
+        System.out.println(dir.getAbsolutePath());
+        BootingUp();
     }
 }
