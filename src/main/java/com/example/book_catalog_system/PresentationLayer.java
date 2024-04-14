@@ -21,7 +21,7 @@ public class PresentationLayer extends Application {
 
 
     public static BookManager bookmanager = new BookManager();
-    ListView<BookManager.Book> tunay = new ListView<>();
+    ListView<Book> tunay = new ListView<>();
     @Override
     public void start (Stage stage) throws Exception {
 
@@ -32,6 +32,9 @@ public class PresentationLayer extends Application {
         Text sTitle = new Text("Search Bar ");
         TextField sField = new TextField("Write Here...");
         Button sButton = new Button("Search");
+        sButton.setOnAction(e ->{
+            //TODO
+        });
 
         searchBar.setAlignment(Pos.CENTER);
         searchBar.getChildren().addAll(sTitle, sField, sButton);
@@ -45,6 +48,8 @@ public class PresentationLayer extends Application {
         Text tTitle = new Text("Tags: ");
         SplitMenuButton split = new SplitMenuButton();
 
+        //TODO seçili tag gösterme
+
 
         List<String> tags = bookmanager.listingTags();
         tags.forEach(tag -> {
@@ -53,14 +58,28 @@ public class PresentationLayer extends Application {
         });
 
         Button tButton = new Button("Filter");
+        tButton.setOnAction(e -> {
+            //TODO filter method goes here
+        });
+
         Button stButton = new Button("Search and Filter");
         tagBar.getChildren().addAll(tTitle, split, tButton, stButton);
 
         HBox footerBar = new HBox(10);
+        Button fShow = new Button("Show Details");
+        fShow.setOnAction(e -> {
+            //TODO detail screen
+        });
         Button fEdit = new Button("Edit");
+        fEdit.setOnAction(e-> {
+            //TODO editing book funciton
+        });
         Button fDelete = new Button("Delete");
+        fDelete.setOnAction(e-> {
+            //TODO deleting book funciton
+        });
 
-        footerBar.getChildren().addAll(fEdit, fDelete);
+        footerBar.getChildren().addAll(fShow, fEdit, fDelete);
         footerBar.setAlignment(Pos.CENTER_RIGHT);
         footerBar.setPadding(new Insets(10));
 
@@ -96,7 +115,6 @@ public class PresentationLayer extends Application {
         MenuItem mAbout = new MenuItem("About");
         MenuItem mManuel = new MenuItem("Manuel");
 
-
         mFile.getItems().addAll(mCreate, mImport, mExport); // add menuitems to file menu
         mHelp.getItems().addAll(mAbout, mManuel);
 
@@ -109,9 +127,6 @@ public class PresentationLayer extends Application {
         stage.setTitle("Book Catalog System: Group 9");
         stage.setScene(tst);
         stage.show();
-
-
-
     }
 
     private void GUIcreateBook() throws IOException {
@@ -120,7 +135,6 @@ public class PresentationLayer extends Application {
         VBox vertical = new VBox( 10);
 
         double wid = 65;
-
 
         HBox isbn = new HBox(10);
         Label lIsbn = new Label("ISBN: ");
