@@ -21,11 +21,11 @@ import java.util.*;
 public class PresentationLayer extends Application {
 
 
+    public static BookManager bookmanager = new BookManager();
     ListView<BookManager.Book> tunay = new ListView<>();
     @Override
     public void start (Stage stage) throws Exception {
 
-        BookManager bManager = new BookManager();
         VBox mainLayout = new VBox();
 
         HBox searchBar = new HBox(10);
@@ -47,7 +47,7 @@ public class PresentationLayer extends Application {
         SplitMenuButton split = new SplitMenuButton();
 
 
-        List<String> tags = bManager.listingTags();
+        List<String> tags = bookmanager.listingTags();
         tags.forEach(tag -> {
             CheckMenuItem checkMenuItem = new CheckMenuItem(tag);
             split.getItems().add(checkMenuItem);
@@ -77,16 +77,18 @@ public class PresentationLayer extends Application {
 
         MenuItem mCreate = new MenuItem("Create");
         mCreate.setAccelerator(KeyCombination.keyCombination("Ctrl+C"));
+        mCreate.setOnAction(e -> {
+            try {
+                openFile(stage);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         MenuItem mImport = new MenuItem("Import");
         mImport.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
         mImport.setOnAction(e -> {
-            try {
-                openFile(stage);
-            }
-            catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            //TODO: Write "not available popup or tooltip"
         });
 
         MenuItem mExport = new MenuItem("Export");
@@ -109,21 +111,28 @@ public class PresentationLayer extends Application {
         stage.setScene(tst);
         stage.show();
 
+
+
     }
 
     private void openFile(Stage stage) throws IOException {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Select file to open!");
-        File f = fc.showOpenDialog(stage); // more to do here…
-        if (f != null) {
-
-        } else {
-            System.out.println("It's null");
-        }
+        Stage secondStage = new Stage();
+        secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
+        secondStage.show();
     }
 
     public static void main (String[]args){
 
+        bookmanager.createBook("1234545640", "ege", "akın", "A1",
+                "Translator1", "Publisher", "za", "First Edition", List.of("Tag1", "Tag2"), "2", "Cover Image URL");
+        bookmanager.createBook("1234545641", "gizem", "akcay", "A2",
+                "Translator1", "Publisher", "za", "Second Edition",
+                List.of("Tag2", "Tag3"), "3", "Cover Image URL");
+        bookmanager.createBook("1234545642", "aras", "firat", "A1",
+                "Translator2", "Publisher", "za", "Fifth Edition",
+                List.of("Tag1", "Tag3"), "4", "Cover Image URL");
+
+        bookmanager.listingTags();
         launch();
     }
 }

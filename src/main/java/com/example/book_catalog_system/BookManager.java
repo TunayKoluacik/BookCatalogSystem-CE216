@@ -3,7 +3,6 @@ package com.example.book_catalog_system;
 import javafx.collections.ObservableList;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,22 +14,22 @@ public class BookManager {
     // allBooks
     TreeMap<Long, Book> BookList = new TreeMap<>();
     // The returned books;
-    ObservableList searchResult;
+    ObservableList<Book> searchResult;
     //- filterResult: A list to store the result of the latest filter query by the user.
-    ObservableList filterResult;
+    ObservableList<Book> filterResult;
 
-    private static List<String> tags;
+    private static ObservableList<String> tags;
 
     BookManager() {
 
     }
 
-    public List getTags() {
+    public ObservableList<String> getTags() {
         return tags;
     }
 
-    public void setTags(ObservableList tags) {
-        this.tags = tags;
+    public void setTags(ObservableList<String> tags) {
+        BookManager.tags = tags;
     }
 
     /* at least client needs to give isbn,title,author,tag
@@ -38,7 +37,7 @@ public class BookManager {
  scanner may be used in this function ı need to discuss with my team.
  isFile
  */
-    public Book createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
+    public void createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
 
 
         Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover);
@@ -49,7 +48,6 @@ public class BookManager {
                 tags.add(tag);
             }
         }
-        return book;
     }
 
     //client is going to give the book isbn that needed to be  edited. And then the attribute that is going to change and then the new value
@@ -110,7 +108,7 @@ public class BookManager {
 
     // Deletion of book ---> delete from the list, do we delete from programs memory too ?
     // and return the deleted book;
-    public Book deleteBook(String isbn) {
+    public void deleteBook(String isbn) {
         Book bookToRemove = BookList.get(Long.parseLong(isbn));
 
         // Check if the book exists
@@ -121,14 +119,13 @@ public class BookManager {
             // Remove the book from the TreeMap
             Book removedBook = BookList.remove(Long.parseLong(isbn));
             JsonDataManager.deleteJson(bookToRemove.getIsbn());
-            return removedBook;
 
         }
     }
 
     public List<String> listingTags(){
         List<String> allTags = new ArrayList<>();
-        for (BookManager.Book book : BookList.values()) {
+        for (Book book : BookList.values()) {
             List<String> tags = book.getTags();
             for (String tag : tags) {
                 if (!allTags.contains(tag)) {
@@ -139,9 +136,9 @@ public class BookManager {
         return allTags;
     }
     //
-    public List<BookManager.Book> filterByTag(List<String> tags) {
-        filterResult = (ObservableList) new ArrayList<>();
-        for (BookManager.Book book : BookList.values()) {
+    public ObservableList<BookManager.Book> filterByTag(ObservableList<String> tags) {
+        filterResult.removeAll();
+        for (Book book : BookList.values()) {
             if(book.getTags().containsAll(tags)) {
                 filterResult.add(book);
             }
@@ -151,10 +148,9 @@ public class BookManager {
 
     static class Book {
         private String isbn, title, subtitle, author, translator, publisher, date, edition, rating, cover;
-        private boolean isFile, isDeleted;
+
         private List<String> tags;
 
-        //constructor without parameters isFile and İsDeleted
 
         public Book(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
             setIsbn(isbn);
@@ -174,23 +170,7 @@ public class BookManager {
             } else setCover(cover);
         }
 
-        // constructor with full attributes
-        public Book(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover, boolean isFile, boolean isDeleted) {
-            setIsbn(isbn);
-            setTitle(title);
-            setSubtitle(subtitle);
-            setAuthor(author);
-            setTranslator(translator);
-            setPublisher(publisher);
-            setDate(date);
-            setEdition(edition);
-            setTags(tags);
-            setRating(rating);
 
-            setCover(cover);
-            setFile(isFile);
-            setDeleted(isDeleted);
-        }
 
         public Book(){
 
@@ -284,23 +264,5 @@ public class BookManager {
         public void setCover(String cover) {
             this.cover = cover;
         }
-
-        public boolean isFile() {
-            return isFile;
-        }
-
-        public void setFile(boolean file) {
-            isFile = file;
-        }
-
-        public boolean isDeleted() {
-            return isDeleted;
-        }
-
-        public void setDeleted(boolean deleted) {
-            isDeleted = deleted;
-        }
-
-
     }
 }
