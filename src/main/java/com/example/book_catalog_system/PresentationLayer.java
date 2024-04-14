@@ -8,14 +8,12 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 
 public class PresentationLayer extends Application {
@@ -79,7 +77,7 @@ public class PresentationLayer extends Application {
         mCreate.setAccelerator(KeyCombination.keyCombination("Ctrl+C"));
         mCreate.setOnAction(e -> {
             try {
-                openFile(stage);
+                GUIcreateBook();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -115,10 +113,109 @@ public class PresentationLayer extends Application {
 
     }
 
-    private void openFile(Stage stage) throws IOException {
-        Stage secondStage = new Stage();
-        secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
-        secondStage.show();
+    private void GUIcreateBook() throws IOException {
+        Stage createStage = new Stage();
+
+        VBox vertical = new VBox( 10);
+
+        HBox isbn = new HBox(10);
+        Label lIsbn = new Label("ISBN: ");
+        lIsbn.setAlignment(Pos.CENTER_LEFT);
+        TextField tIsbn = new TextField();
+        tIsbn.setAlignment(Pos.CENTER_RIGHT);
+        Region filler = new Region();
+        HBox.setHgrow(filler, Priority.ALWAYS);
+        HBox.setHgrow(tIsbn, Priority.ALWAYS);
+        isbn.getChildren().addAll(lIsbn, filler, tIsbn);
+
+        HBox title = new HBox(10);
+        Label lTitle = new Label("Title: ");
+        lTitle.setAlignment(Pos.CENTER_LEFT);
+        TextField tTitle = new TextField();
+        tTitle.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tTitle, Priority.ALWAYS);
+        title.getChildren().addAll(lTitle, filler, tTitle);
+
+        HBox subtitle = new HBox(10);
+        Label lSubtitle = new Label("Subtitle: ");
+        lSubtitle.setAlignment(Pos.CENTER_LEFT);
+        TextField tSubtitle = new TextField();
+        tSubtitle.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tSubtitle, Priority.ALWAYS);
+        subtitle.getChildren().addAll(lSubtitle, filler, tSubtitle);
+
+        HBox author = new HBox(10);
+        Label lAuthor = new Label("Author: ");
+        lAuthor.setAlignment(Pos.CENTER_LEFT);
+        TextField tAuthor = new TextField();
+        tAuthor.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tAuthor, Priority.ALWAYS);
+        author.getChildren().addAll(lAuthor, filler, tAuthor);
+
+        HBox translator = new HBox(10);
+        Label lTranslator = new Label("Translator: ");
+        lTranslator.setAlignment(Pos.CENTER_LEFT);
+        TextField tTranslator = new TextField();
+        tTranslator.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tTranslator, Priority.ALWAYS);
+        translator.getChildren().addAll(lTranslator, filler, tTranslator);
+
+        HBox publisher = new HBox(10);
+        Label lPublisher = new Label("Publisher: ");
+        lPublisher.setAlignment(Pos.CENTER_LEFT);
+        TextField tPublisher = new TextField();
+        tPublisher.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tPublisher, Priority.ALWAYS);
+        publisher.getChildren().addAll(lPublisher, filler, tPublisher);
+
+        HBox date = new HBox(10);
+        Label lDate = new Label("Date: ");
+        lDate.setAlignment(Pos.CENTER_LEFT);
+        TextField tDate = new TextField();
+        tDate.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tDate, Priority.ALWAYS);
+        date.getChildren().addAll(lDate, filler, tDate);
+
+        HBox edition = new HBox(10);
+        Label lEdition = new Label("Edition: ");
+        lEdition.setAlignment(Pos.CENTER_LEFT);
+        TextField tEdition = new TextField();
+        tEdition.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tEdition, Priority.ALWAYS);
+        edition.getChildren().addAll(lEdition, filler, tEdition);
+
+        HBox tags = new HBox(10);
+        Label lTags = new Label("Tags: ");
+        lTags.setAlignment(Pos.CENTER_LEFT);
+        TextField tTags = new TextField();
+        tTags.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tTags, Priority.ALWAYS);
+        tags.getChildren().addAll(lTags, filler, tTags);
+
+        HBox rating = new HBox(10);
+        Label lRating = new Label("Rating: ");
+        lRating.setAlignment(Pos.CENTER_LEFT);
+        TextField tRating = new TextField();
+        tRating.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tRating, Priority.ALWAYS);
+        rating.getChildren().addAll(lRating, filler, tRating);
+
+        HBox cover = new HBox(10);
+        Label lCover = new Label("Cover: ");
+        lCover.setAlignment(Pos.CENTER_LEFT);
+        TextField tCover = new TextField();
+        tCover.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(tCover, Priority.ALWAYS);
+        cover.getChildren().addAll(lCover, filler, tCover);
+
+
+        vertical.setAlignment(Pos.TOP_CENTER);
+        vertical.getChildren().addAll(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover);
+        vertical.setPadding(new Insets(10));
+
+        Scene createScene = new Scene(vertical, 300, 500);
+        createStage.setScene(createScene);
+        createStage.showAndWait();
     }
 
     public static void main (String[]args){
