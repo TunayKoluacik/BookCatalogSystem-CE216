@@ -8,7 +8,6 @@ import org.json.JSONTokener;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -106,33 +105,33 @@ public class JsonDataManager {
     }
 
     // Export a single book to a JSON file
-    public static void exportBookToJson(Book book) {
-
-        String filename=  book.getIsbn();
-        filename+= ".json";
-
-        try (Writer writer = new FileWriter(filename)) {
-            JSONObject jsonObject = createJSONObject(book);
-            writer.write(jsonObject.toString());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Failed export from json" + filename);
-        }
-    }
-
-    // Import a single book from a JSON file
-    public static Book importBookFromJson(String filename) {
-
-        try (Reader reader = new FileReader(filename)) {
-            JSONObject jsonObject = new JSONObject(new JSONTokener(reader));
-            return createBookFromJSONObject(jsonObject);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Failed import from book" + filename);
-        }
-        return null;
-    }
+//    public static void exportBookToJson(Book book) {
+//
+//        String filename=  book.getIsbn();
+//        filename+= ".json";
+//
+//        try (Writer writer = new FileWriter(filename)) {
+//            JSONObject jsonObject = createJSONObject(book);
+//            writer.write(jsonObject.toString());
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.out.println("Failed export from json" + filename);
+//        }
+//    }
+//
+//    // Import a single book from a JSON file
+//    public static Book importBookFromJson(String filename) {
+//
+//        try (Reader reader = new FileReader(filename)) {
+//            JSONObject jsonObject = new JSONObject(new JSONTokener(reader));
+//            return createBookFromJSONObject(jsonObject);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.out.println("Failed import from book" + filename);
+//        }
+//        return null;
+//    }
 
     // creates a json with the book object
     private static JSONObject createJSONObject(Book book) {
@@ -202,14 +201,14 @@ public class JsonDataManager {
         // read test
         Book book = readBooksFromJson("1234567890.json");
 
-        createJSONObject(book);
+        if (book != null) createJSONObject(book);
 
         createBookFromJSONObject(createJSONObject(aras));
         // reads correctly as seen
         TreeMap<Long, Book> test = bookmanager.getBookList();
 
         System.out.println(test.get(Long.parseLong(aras.getIsbn())).getAuthor());
-        System.out.println(book.getTitle());
+        if (book != null) System.out.println(book.getTitle());
         System.out.println(bookmanager.listingTags());
 
         System.out.println(dir.getAbsolutePath());

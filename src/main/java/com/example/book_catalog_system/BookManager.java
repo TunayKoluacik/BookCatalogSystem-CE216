@@ -22,8 +22,7 @@ public class BookManager{
 
     public ObservableList<Book> OgetBookList() {
 
-        ArrayList<Book> valueList = new ArrayList<Book>();
-        valueList.addAll(getBookList().values());
+        ArrayList<Book> valueList = new ArrayList<>(getBookList().values());
 
         return FXCollections.observableList(valueList);
     }
@@ -53,7 +52,7 @@ public class BookManager{
     // The returned books;
 
 
-    private static ObservableList<String> totalTags = FXCollections.observableArrayList();;
+    private static ObservableList<String> totalTags = FXCollections.observableArrayList();
 
     public JsonDataManager getDataManager() {
         return dataManager;
@@ -62,7 +61,7 @@ public class BookManager{
     private JsonDataManager dataManager;
 
     public BookManager() {
-        JsonDataManager dataManager = new JsonDataManager();
+        dataManager = new JsonDataManager();
     }
 
     public ObservableList<String> getTags() {
@@ -109,9 +108,8 @@ if(BookList.get(Long.parseLong(isbn)) == null){
             throw new IllegalArgumentException("Book with ISBN '" + isbn + "' does not exist.");
         }
 
-        for (int i = 0; i < params.length; i++) {
+        for (Object value : params) {
 
-            Object value = params[i];
             switch (attribute.toLowerCase()) {
                 case "isbn":
                     bookToUpdate.setIsbn((String) value);
@@ -139,8 +137,8 @@ if(BookList.get(Long.parseLong(isbn)) == null){
                     break;
                 case "tag":
                     ObservableList<String> cnvrt = FXCollections.observableList(Collections.singletonList((String) value));
-                    for(String tag : bookToUpdate.getTags()){
-                        if(!totalTags.contains(tag)){
+                    for (String tag : bookToUpdate.getTags()) {
+                        if (!totalTags.contains(tag)) {
                             totalTags.add(tag);
                         }
                     }
@@ -171,13 +169,13 @@ if(BookList.get(Long.parseLong(isbn)) == null){
             throw new IllegalArgumentException("Book with ISBN '" + isbn + "' does not exist.");
         } else {
             // Remove the book from the TreeMap
-            Book removedBook = BookList.remove(Long.parseLong(isbn));
+            BookList.remove(Long.parseLong(isbn));
             JsonDataManager.deleteJson(bookToRemove.getIsbn());
 
         }
     }
 
-    public List<String> listingTags(){;
+    public List<String> listingTags(){
         for (Book book : BookList.values()) {
             List<String> tags = book.getTags();
             for (String tag : tags) {

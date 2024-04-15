@@ -70,7 +70,6 @@ public class PresentationLayer extends Application {
         split.setMinWidth(75);
         updateButtonText(split);
 
-        //TODO seçili tag gösterme
 
 
         List<String> tags = bookmanager.listingTags();
@@ -80,17 +79,7 @@ public class PresentationLayer extends Application {
             checkMenuItem.selectedProperty().addListener((obs, oldVal, newVal) -> updateButtonText(split));
         });
 
-        Button tButton = new Button("Filter");
-        tButton.setOnAction(e -> {
-            //TODO filter method goes here
-            String[] selectedItems = split.getItems().stream()
-                    .map(CheckMenuItem.class::cast)
-                    .filter(CheckMenuItem::isSelected)
-                    .map(CheckMenuItem::getText)
-                    .toArray(String[]::new);
-            tunay.getItems().clear();
-            tunay.setItems(bookmanager.filterByTag(List.of(selectedItems)));
-        });
+        Button tButton = getButton(split);
 
         Button stButton = new Button("Search and Filter");
         tagBar.getChildren().addAll(tTitle, split, tButton, stButton);
@@ -115,7 +104,9 @@ public class PresentationLayer extends Application {
         });
         Button fDelete = new Button("Delete");
         fDelete.setOnAction(e-> {
-            //TODO deleting book funciton
+            bookmanager.deleteBook(tunay.getSelectionModel().getSelectedItem().getIsbn());
+            tunay.getItems().clear();
+            tunay.setItems(bookmanager.OgetBookList());
         });
 
         footerBar.getChildren().addAll(fShow, fEdit, fDelete);
@@ -141,6 +132,8 @@ public class PresentationLayer extends Application {
                 throw new RuntimeException(ex);
             }
             renewTags(split);
+            tunay.getItems().clear();
+            tunay.setItems(bookmanager.OgetBookList());
         });
 
         MenuItem mImport = new MenuItem("Import");
@@ -167,6 +160,20 @@ public class PresentationLayer extends Application {
         stage.setTitle("Book Catalog System: Group 9");
         stage.setScene(tst);
         stage.show();
+    }
+
+    private Button getButton(SplitMenuButton split) {
+        Button tButton = new Button("Filter");
+        tButton.setOnAction(e -> {
+            String[] selectedItems = split.getItems().stream()
+                    .map(CheckMenuItem.class::cast)
+                    .filter(CheckMenuItem::isSelected)
+                    .map(CheckMenuItem::getText)
+                    .toArray(String[]::new);
+            tunay.getItems().clear();
+            tunay.setItems(bookmanager.filterByTag(List.of(selectedItems)));
+        });
+        return tButton;
     }
 
     private static void renewTags(SplitMenuButton split) {
@@ -299,9 +306,7 @@ public class PresentationLayer extends Application {
 
         HBox cButtons = new HBox(10);
         Button csCancel = new Button("Close");
-        csCancel.setOnAction(e-> {
-            showStage.close();
-        });
+        csCancel.setOnAction(e-> showStage.close());
 
         cButtons.getChildren().addAll(csCancel);
 
@@ -431,14 +436,14 @@ public class PresentationLayer extends Application {
         Button csCreate = new Button("Create");
         csCreate.setOnAction(e -> {
             String temp = tTags.getText();
+            //TODO Check if you entered these: isbn,title,author,tag
+            //TODO Check if ISBN is 13 digits
             List<String> temptags = Arrays.asList(temp.replace(" ", "").split(","));
             bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
             createStage.close();
         });
         Button csCancel = new Button("Cancel");
-        csCancel.setOnAction(e-> {
-            createStage.close();
-        });
+        csCancel.setOnAction(e-> createStage.close());
 
         cButtons.getChildren().addAll(csCreate, csCancel);
 
@@ -577,9 +582,7 @@ public class PresentationLayer extends Application {
             csCancel.setText("Close");
         });
 
-        csCancel.setOnAction(e-> {
-            editStage.close();
-        });
+        csCancel.setOnAction(e-> editStage.close());
 
         cButtons.getChildren().addAll(esEdit, csCancel);
 
