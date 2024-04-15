@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
@@ -15,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,9 +55,7 @@ public class PresentationLayer extends Application {
         Text sTitle = new Text("Search Bar ");
         TextField sField = new TextField("Write Here...");
         Button sButton = new Button("Search");
-        sButton.setOnAction(e ->{
-            alertNotReady();
-        });
+        sButton.setOnAction(e -> alertNotReady());
 
         searchBar.setAlignment(Pos.CENTER);
         searchBar.getChildren().addAll(sTitle, sField, sButton);
@@ -318,11 +318,23 @@ public class PresentationLayer extends Application {
         Label lCover = new Label("Cover: ");
         lCover.setAlignment(Pos.CENTER_LEFT);
         lCover.setMinWidth(wid);
-        TextField tCover = new TextField(book.getCover());
-        ImageView img = new ImageView();
-        tCover.setAlignment(Pos.CENTER_RIGHT);
-        HBox.setHgrow(tCover, Priority.ALWAYS);
-        cover.getChildren().addAll(lCover, tCover);
+        ImageView imgView = new ImageView();
+        Label empty = new Label();
+        Image image;
+        if (!book.getCover().equals("null")) {
+            File file = new File(book.getCover());
+            if (file.exists()) {
+                try {
+                    image = new Image(book.getCover());
+                    imgView = new ImageView(image);
+                } catch (Exception e) {
+                    empty.setText("There is no cover photo!");
+                }
+            }else empty.setText("There is no cover photo!");
+        }else {
+            empty.setText("There is no cover photo!");
+        }
+        cover.getChildren().addAll(lCover, empty, imgView);
 
         HBox cButtons = new HBox(10);
         Button csCancel = new Button("Close");
@@ -614,10 +626,16 @@ public class PresentationLayer extends Application {
         Label lCover = new Label("Cover: ");
         lCover.setAlignment(Pos.CENTER_LEFT);
         lCover.setMinWidth(wid);
+        ImageView imgView = new ImageView();
+        Image image;
+        if (!book.getCover().equals("null")) {
+            image = new Image(book.getCover());
+            imgView = new ImageView(image);
+        }
         TextField tCover = new TextField(book.getCover());
         tCover.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(tCover, Priority.ALWAYS);
-        cover.getChildren().addAll(lCover, tCover);
+        cover.getChildren().addAll(lCover, imgView, tCover);
 
         Label progress = new Label("");
         HBox cButtons = new HBox(10);

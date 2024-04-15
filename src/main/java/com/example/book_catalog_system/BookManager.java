@@ -4,8 +4,15 @@ package com.example.book_catalog_system;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
+
+import javax.imageio.ImageIO;
 
 
 public class BookManager{
@@ -82,6 +89,23 @@ if(BookList.get(Long.parseLong(isbn)) == null){
 
     }
     public void createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
+
+
+
+
+
+        try {
+            FileInputStream inputFile = new FileInputStream(cover);
+            BufferedImage image = ImageIO.read(inputFile);
+
+            File outputFile = new File(JsonDataManager.dir + isbn + ".jpg");
+            ImageIO.write(image, "jpg", outputFile);
+            System.out.println(outputFile);
+        } catch (IOException e) {
+            cover = "null";
+        }
+
+
 
 
         Book book = new Book(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover);
