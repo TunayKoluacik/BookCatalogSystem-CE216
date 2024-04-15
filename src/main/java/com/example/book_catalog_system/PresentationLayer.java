@@ -3,7 +3,6 @@ package com.example.book_catalog_system;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCombination;
@@ -17,11 +16,12 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PresentationLayer extends Application {
     public static BookManager bookmanager = new BookManager();
 
-    public class BookCellFactory implements Callback<ListView<Book>, ListCell<Book>> {
+    public static class BookCellFactory implements Callback<ListView<Book>, ListCell<Book>> {
         @Override
         public ListCell<Book> call(ListView<Book> param) {
             return new ListCell<>(){
@@ -67,6 +67,8 @@ public class PresentationLayer extends Application {
 
         Text tTitle = new Text("Tags: ");
         SplitMenuButton split = new SplitMenuButton();
+        split.setMinWidth(75);
+        updateButtonText(split);
 
         //TODO seçili tag gösterme
 
@@ -75,6 +77,7 @@ public class PresentationLayer extends Application {
         tags.forEach(tag -> {
             CheckMenuItem checkMenuItem = new CheckMenuItem(tag);
             split.getItems().add(checkMenuItem);
+            checkMenuItem.selectedProperty().addListener((obs, oldVal, newVal) -> updateButtonText(split));
         });
 
         Button tButton = new Button("Filter");
@@ -108,11 +111,7 @@ public class PresentationLayer extends Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            //TODO Fix this
-            bookmanager.listingTags().forEach(tag -> {
-                CheckMenuItem checkMenuItem = new CheckMenuItem(tag);
-                if (!split.getItems().contains(checkMenuItem)) split.getItems().add(checkMenuItem);
-            });
+            renewTags(split);
         });
         Button fDelete = new Button("Delete");
         fDelete.setOnAction(e-> {
@@ -141,10 +140,7 @@ public class PresentationLayer extends Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            bookmanager.listingTags().forEach(tag -> {
-                CheckMenuItem checkMenuItem = new CheckMenuItem(tag);
-                if (!split.getItems().contains(checkMenuItem)) split.getItems().add(checkMenuItem);
-            });
+            renewTags(split);
         });
 
         MenuItem mImport = new MenuItem("Import");
@@ -171,6 +167,26 @@ public class PresentationLayer extends Application {
         stage.setTitle("Book Catalog System: Group 9");
         stage.setScene(tst);
         stage.show();
+    }
+
+    private static void renewTags(SplitMenuButton split) {
+        split.getItems().clear();
+        bookmanager.listingTags().forEach(tag -> {
+            CheckMenuItem checkMenuItem = new CheckMenuItem(tag);
+            if (!split.getItems().contains(checkMenuItem)) {
+                split.getItems().add(checkMenuItem);
+                checkMenuItem.selectedProperty().addListener((obs, oldVal, newVal) -> updateButtonText(split));
+            }
+        });
+    }
+
+    private static void updateButtonText(SplitMenuButton splitMenuButton) {
+        String text = splitMenuButton.getItems().stream()
+                .filter(menuItem -> CheckMenuItem.class.isAssignableFrom(menuItem.getClass()) && ((CheckMenuItem) menuItem).isSelected())
+                .map(MenuItem::getText)
+                .collect(Collectors.joining(", "));
+        splitMenuButton.setText(text.isEmpty() ? "" : text);
+        System.out.println("\"" +text + "\"");
     }
 
     private void GUIshowBook(Book book) throws IOException{
@@ -415,7 +431,7 @@ public class PresentationLayer extends Application {
         Button csCreate = new Button("Create");
         csCreate.setOnAction(e -> {
             String temp = tTags.getText();
-            List<String> temptags = List.of(temp.split(","));
+            List<String> temptags = Arrays.asList(temp.replace(" ", "").split(","));
             bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
             createStage.close();
         });
@@ -554,7 +570,7 @@ public class PresentationLayer extends Application {
         Button csCancel = new Button("Cancel");
         esEdit.setOnAction(e -> {
             String temp = tTags.getText();
-            List<String> temptags = List.of(temp.split(","));
+            List<String> temptags = List.of(temp.replace(" ", "").split(","));
             bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
 
             progress.setText("Done");

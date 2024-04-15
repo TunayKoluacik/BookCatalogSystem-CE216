@@ -5,7 +5,6 @@ package com.example.book_catalog_system;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.File;
 import java.util.*;
 
 
@@ -54,7 +53,7 @@ public class BookManager{
     // The returned books;
 
 
-    private static ObservableList<String> tags;
+    private static ObservableList<String> totalTags = FXCollections.observableArrayList();;
 
     public JsonDataManager getDataManager() {
         return dataManager;
@@ -67,11 +66,11 @@ public class BookManager{
     }
 
     public ObservableList<String> getTags() {
-        return tags;
+        return totalTags;
     }
 
     public void setTags(ObservableList<String> tags) {
-        BookManager.tags = tags;
+        BookManager.totalTags = tags;
     }
 
     /* at least client needs to give isbn,title,author,tag
@@ -93,8 +92,8 @@ if(BookList.get(Long.parseLong(isbn)) == null){
         JsonDataManager.saveBookToJson(book);
         BookList.put(Long.parseLong(isbn), book);
         for(String tag : book.getTags()){
-            if(!tags.contains(tag)){
-                tags.add(tag);
+            if(!totalTags.contains(tag)){
+                totalTags.add(tag);
             }
         }
     }
@@ -141,8 +140,8 @@ if(BookList.get(Long.parseLong(isbn)) == null){
                 case "tag":
                     ObservableList<String> cnvrt = FXCollections.observableList(Collections.singletonList((String) value));
                     for(String tag : bookToUpdate.getTags()){
-                        if(!tags.contains(tag)){
-                            tags.add(tag);
+                        if(!totalTags.contains(tag)){
+                            totalTags.add(tag);
                         }
                     }
                     bookToUpdate.setTags(cnvrt);
@@ -178,23 +177,22 @@ if(BookList.get(Long.parseLong(isbn)) == null){
         }
     }
 
-    public List<String> listingTags(){
-        List<String> allTags = new ArrayList<>();
+    public List<String> listingTags(){;
         for (Book book : BookList.values()) {
             List<String> tags = book.getTags();
             for (String tag : tags) {
-                if (!allTags.contains(tag)) {
-                    allTags.add(tag);
+                if (!totalTags.contains(tag)) {
+                    totalTags.add(tag);
                 }
             }
         }
-        return allTags;
+        return totalTags;
     }
     //
     public ObservableList<Book> filterByTag(List<String> tags) {
         filterResult.clear();
         for (Book book : BookList.values()) {
-            if(book.getTags().containsAll(tags)) {
+            if(new HashSet<>(book.getTags()).containsAll(tags)) {
                 filterResult.add(book);
             }
         }
