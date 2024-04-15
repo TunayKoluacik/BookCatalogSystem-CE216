@@ -322,6 +322,8 @@ public class PresentationLayer extends Application {
         lCover.setMinWidth(wid);
         Image image = book.getCover();
         ImageView imgView = new ImageView(image);
+        imgView.setFitWidth(200);
+        imgView.setFitHeight(200);
         Label cvr = new Label("");
         if (book.getCoverPath().equals("null")) cvr.setText("No Cover Photo!");
         cover.getChildren().addAll(lCover, cvr, imgView);
@@ -342,7 +344,7 @@ public class PresentationLayer extends Application {
         vertical.getChildren().addAll(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover, progress, fill, cButtons);
         vertical.setPadding(new Insets(10));
 
-        Scene createScene = new Scene(vertical, 300, 500);
+        Scene createScene = new Scene(vertical, 300, 700);
         showStage.setScene(createScene);
         showStage.show();
     }
@@ -487,9 +489,14 @@ public class PresentationLayer extends Application {
             alertText += " attribute(s).";
             if (!done) progress.setText(alertText);
             else {
-                List<String> temptags = Arrays.asList(temp.replace(" ", "").split(","));
-                bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
-                createStage.close();
+                if (bookmanager.getBookList().containsKey(Long.parseLong(tIsbn.getText()))) {
+                    alertText = "ISBN already exists!";
+                    progress.setText(alertText);
+                } else {
+                    List<String> temptags = Arrays.asList(temp.replace(" ", "").split(","));
+                    bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
+                    createStage.close();
+                }
             }
         });
         Button csCancel = new Button("Cancel");
@@ -618,6 +625,8 @@ public class PresentationLayer extends Application {
         lCover.setMinWidth(wid);
         Image image = book.getCover();
         ImageView imgView = new ImageView(image);
+        imgView.setFitWidth(200);
+        imgView.setFitHeight(200);
         TextField tCover = new TextField(book.getCoverPath());
         tCover.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(tCover, Priority.ALWAYS);
@@ -664,7 +673,7 @@ public class PresentationLayer extends Application {
         vertical.getChildren().addAll(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover, progress, fill, cButtons);
         vertical.setPadding(new Insets(10));
 
-        Scene createScene = new Scene(vertical, 300, 500);
+        Scene createScene = new Scene(vertical, 500, 700);
         editStage.setScene(createScene);
         editStage.showAndWait();
     }

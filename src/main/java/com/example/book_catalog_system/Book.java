@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -130,7 +131,7 @@ public class Book{
         if (isFile(s)){
             this.coverPath = s;
         }else{
-            setCoverPath("null", true);
+            setCoverPath("def.png");
         }
     }
     public void setCoverPath(String s, boolean b){
@@ -139,7 +140,8 @@ public class Book{
 
     private boolean isFile(String s) {
         try{
-            cover = new Image(s);
+            FileInputStream fis = new FileInputStream(s);
+            cover = new Image(fis);
         } catch (Exception e) {
             return false;
         }
