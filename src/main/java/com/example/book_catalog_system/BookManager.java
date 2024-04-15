@@ -21,10 +21,7 @@ public class BookManager{
     }
 
     public ObservableList<Book> OgetBookList() {
-
-        ArrayList<Book> valueList = new ArrayList<>(getBookList().values());
-
-        return FXCollections.observableList(valueList);
+        return FXCollections.observableList(new ArrayList<>(getBookList().values()));
     }
 
     public void setBookList(TreeMap<Long, Book> bookList) {
@@ -112,7 +109,11 @@ if(BookList.get(Long.parseLong(isbn)) == null){
 
             switch (attribute.toLowerCase()) {
                 case "isbn":
+                    String deleteISBN = bookToUpdate.getIsbn();
                     bookToUpdate.setIsbn((String) value);
+                    JsonDataManager.deleteJson(deleteISBN);
+                    BookList.remove(Long.parseLong(deleteISBN));
+                    BookList.put(Long.parseLong(bookToUpdate.getIsbn()), bookToUpdate);
                     break;
                 case "title":
                     bookToUpdate.setTitle((String) value);
@@ -136,7 +137,7 @@ if(BookList.get(Long.parseLong(isbn)) == null){
                     bookToUpdate.setEdition((String) value);
                     break;
                 case "tag":
-                    ObservableList<String> cnvrt = FXCollections.observableList(Collections.singletonList((String) value));
+                    ObservableList<String> cnvrt = FXCollections.observableList(List.of(value.toString().replace(" ", "").replace("[", "").replace("]", "").split(",")));
                     for (String tag : bookToUpdate.getTags()) {
                         if (!totalTags.contains(tag)) {
                             totalTags.add(tag);
@@ -160,20 +161,6 @@ if(BookList.get(Long.parseLong(isbn)) == null){
 
     // Deletion of book ---> delete from the list, do we delete from programs memory too ?
     // and return the deleted book;
-    public void deleteBook(String isbn) {
-        Book bookToRemove = BookList.get(Long.parseLong(isbn));
-
-        // Check if the book exists
-        if (bookToRemove == null) {
-            // Book with the given ISBN does not exist
-            throw new IllegalArgumentException("Book with ISBN '" + isbn + "' does not exist.");
-        } else {
-            // Remove the book from the TreeMap
-            BookList.remove(Long.parseLong(isbn));
-            JsonDataManager.deleteJson(bookToRemove.getIsbn());
-
-        }
-    }
 
     public List<String> listingTags(){
         for (Book book : BookList.values()) {
@@ -195,5 +182,21 @@ if(BookList.get(Long.parseLong(isbn)) == null){
             }
         }
         return filterResult;
+    }
+
+    public void deleteBook(String isbn) {
+        Book bookToRemove = BookList.get(Long.parseLong(isbn));
+
+        // Check if the book exists
+        if (bookToRemove == null) {
+            // Book with the given ISBN does not exist
+            throw new IllegalArgumentException("Book with ISBN '" + isbn + "' does not exist.");
+        } else {
+            // Remove the book from the TreeMap
+
+            JsonDataManager.deleteJson(isbn);
+            BookList.remove(Long.parseLong(isbn));
+
+        }
     }
 }

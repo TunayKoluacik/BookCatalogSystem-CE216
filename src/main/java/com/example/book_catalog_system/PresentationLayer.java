@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -53,7 +54,7 @@ public class PresentationLayer extends Application {
         TextField sField = new TextField("Write Here...");
         Button sButton = new Button("Search");
         sButton.setOnAction(e ->{
-            //TODO next milestone
+            alertNotReady();
         });
 
         searchBar.setAlignment(Pos.CENTER);
@@ -82,6 +83,7 @@ public class PresentationLayer extends Application {
         Button tButton = getButton(split);
 
         Button stButton = new Button("Search and Filter");
+        stButton.setOnAction(e -> alertNotReady());
         tagBar.getChildren().addAll(tTitle, split, tButton, stButton);
 
         HBox footerBar = new HBox(10);
@@ -101,9 +103,13 @@ public class PresentationLayer extends Application {
                 throw new RuntimeException(ex);
             }
             renewTags(split);
+            tunay.getItems().clear();
+            tunay.setItems(bookmanager.OgetBookList());
         });
         Button fDelete = new Button("Delete");
         fDelete.setOnAction(e-> {
+            alertWarn("You are about to delete \"" + tunay.getSelectionModel().getSelectedItem().getTitle() +"\" book. Are you sure?");
+
             bookmanager.deleteBook(tunay.getSelectionModel().getSelectedItem().getIsbn());
             tunay.getItems().clear();
             tunay.setItems(bookmanager.OgetBookList());
@@ -160,6 +166,18 @@ public class PresentationLayer extends Application {
         stage.setTitle("Book Catalog System: Group 9");
         stage.setScene(tst);
         stage.show();
+    }
+
+    private void alertWarn(String s) {
+        Alert cnfrmAlert = new Alert(Alert.AlertType.WARNING);
+        cnfrmAlert.setContentText(s);
+        cnfrmAlert.showAndWait();
+    }
+
+    private void alertNotReady() {
+        Alert cnfrmAlert = new Alert(Alert.AlertType.INFORMATION);
+        cnfrmAlert.setContentText("This feature is not ready!");
+        cnfrmAlert.showAndWait();
     }
 
     private Button getButton(SplitMenuButton split) {
@@ -295,11 +313,13 @@ public class PresentationLayer extends Application {
         HBox.setHgrow(tRating, Priority.ALWAYS);
         rating.getChildren().addAll(lRating, tRating);
 
+        //TODO Fix cover to show Images abd fix the edit and create functions
         HBox cover = new HBox(10);
         Label lCover = new Label("Cover: ");
         lCover.setAlignment(Pos.CENTER_LEFT);
         lCover.setMinWidth(wid);
         TextField tCover = new TextField(book.getCover());
+        ImageView img = new ImageView();
         tCover.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(tCover, Priority.ALWAYS);
         cover.getChildren().addAll(lCover, tCover);
@@ -432,15 +452,43 @@ public class PresentationLayer extends Application {
         HBox.setHgrow(tCover, Priority.ALWAYS);
         cover.getChildren().addAll(lCover, tCover);
 
+        Label progress = new Label("");
         HBox cButtons = new HBox(10);
         Button csCreate = new Button("Create");
         csCreate.setOnAction(e -> {
             String temp = tTags.getText();
-            //TODO Check if you entered these: isbn,title,author,tag
-            //TODO Check if ISBN is 13 digits
-            List<String> temptags = Arrays.asList(temp.replace(" ", "").split(","));
-            bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
-            createStage.close();
+            String alertText = "Missing ";
+            boolean done = true;
+            int ctr = 0;
+            if (tIsbn.getText().isBlank()){
+                alertText += "ISBN";
+                ctr++;
+                done = false;
+            }
+            if (tTitle.getText().isBlank()){
+                if (ctr != 0) alertText += ", ";
+                alertText += "Title";
+                ctr++;
+                done = false;
+            }
+            if (tAuthor.getText().isBlank()){
+                if (ctr != 0) alertText += ", ";
+                alertText += "Author";
+                ctr++;
+                done = false;
+            }
+            if (tTags.getText().isBlank()){
+                if (ctr != 0) alertText += ", ";
+                alertText += "Tags";
+                done = false;
+            }
+            alertText += " attribute(s).";
+            if (!done) progress.setText(alertText);
+            else {
+                List<String> temptags = Arrays.asList(temp.replace(" ", "").split(","));
+                bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
+                createStage.close();
+            }
         });
         Button csCancel = new Button("Cancel");
         csCancel.setOnAction(e-> createStage.close());
@@ -453,12 +501,12 @@ public class PresentationLayer extends Application {
         VBox.setVgrow(filler, Priority.ALWAYS);
 
         vertical.setAlignment(Pos.TOP_CENTER);
-        vertical.getChildren().addAll(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover, filler, cButtons);
+        vertical.getChildren().addAll(isbn, title, subtitle, author, translator, publisher, date, edition, tags, rating, cover, progress, filler, cButtons);
         vertical.setPadding(new Insets(10));
 
         Scene createScene = new Scene(vertical, 300, 500);
         createStage.setScene(createScene);
-        createStage.show();
+        createStage.showAndWait();
     }
 
     private void GUIeditBook(Book book) throws IOException {
@@ -474,7 +522,8 @@ public class PresentationLayer extends Application {
         Label lIsbn = new Label("ISBN: ");
         lIsbn.setAlignment(Pos.CENTER_LEFT);
         lIsbn.setMinWidth(wid);
-        TextField tIsbn = new TextField(book.getIsbn());
+        String tempISBN = book.getIsbn();
+        TextField tIsbn = new TextField(tempISBN);
         tIsbn.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(tIsbn, Priority.ALWAYS);
         isbn.getChildren().addAll(lIsbn, tIsbn);
@@ -561,6 +610,7 @@ public class PresentationLayer extends Application {
         rating.getChildren().addAll(lRating, tRating);
 
         HBox cover = new HBox(10);
+        //TODO Show the image as well
         Label lCover = new Label("Cover: ");
         lCover.setAlignment(Pos.CENTER_LEFT);
         lCover.setMinWidth(wid);
@@ -576,10 +626,24 @@ public class PresentationLayer extends Application {
         esEdit.setOnAction(e -> {
             String temp = tTags.getText();
             List<String> temptags = List.of(temp.replace(" ", "").split(","));
-            bookmanager.createBook(tIsbn.getText(), tTitle.getText(), tSubtitle.getText(), tAuthor.getText(), tTranslator.getText(), tPublisher.getText(), tDate.getText(), tEdition.getText(), temptags, tRating.getText(), tCover.getText());
+            if (isLong(tIsbn.getText())) {
+                if (!Objects.equals(tempISBN, tIsbn.getText())) bookmanager.editBook(tempISBN, "isbn", tIsbn.getText());
+                bookmanager.editBook(tIsbn.getText(), "title", tTitle.getText());
+                bookmanager.editBook(tIsbn.getText(), "subtitle", tSubtitle.getText());
+                bookmanager.editBook(tIsbn.getText(), "author", tAuthor.getText());
+                bookmanager.editBook(tIsbn.getText(), "translator", tTranslator.getText());
+                bookmanager.editBook(tIsbn.getText(), "publisher", tPublisher.getText());
+                bookmanager.editBook(tIsbn.getText(), "date", tDate.getText());
+                bookmanager.editBook(tIsbn.getText(), "edition", tEdition.getText());
+                bookmanager.editBook(tIsbn.getText(), "tag", temptags);
+                bookmanager.editBook(tIsbn.getText(), "rating", tRating.getText());
+                bookmanager.editBook(tIsbn.getText(), "cover", tCover.getText());
 
-            progress.setText("Done");
-            csCancel.setText("Close");
+                progress.setText("Done");
+                csCancel.setText("Close");
+            } else progress.setText("ISBN Error");
+
+
         });
 
         csCancel.setOnAction(e-> editStage.close());
@@ -598,8 +662,18 @@ public class PresentationLayer extends Application {
 
         Scene createScene = new Scene(vertical, 300, 500);
         editStage.setScene(createScene);
-        editStage.show();
+        editStage.showAndWait();
     }
+
+    public boolean isLong(String str) {
+        try {
+            Long.parseLong(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 
     public static void main (String[]args){
 
