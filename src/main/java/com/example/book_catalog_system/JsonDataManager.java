@@ -95,7 +95,7 @@ public class JsonDataManager {
             ObservableList<String> cnvrt = FXCollections.observableList(tags);
             book.setTags(cnvrt);
             book.setRating(jsonObject.getString("rating"));
-            book.setCover(jsonObject.getString("cover"));
+            book.setCoverPath(jsonObject.getString("cover"));
             return book;
         } catch (IOException e) {
             //e.printStackTrace();
@@ -169,7 +169,7 @@ public class JsonDataManager {
         ObservableList<String> cnvrt = FXCollections.observableList(tags);
         book.setTags(cnvrt);
         book.setRating(jsonObject.optString("rating", ""));
-        book.setCover(jsonObject.optString("cover", ""));
+        book.setCoverPath(jsonObject.optString("cover", ""));
         return book;
     }
 

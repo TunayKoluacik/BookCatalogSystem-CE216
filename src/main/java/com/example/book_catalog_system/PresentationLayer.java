@@ -16,6 +16,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -318,23 +320,11 @@ public class PresentationLayer extends Application {
         Label lCover = new Label("Cover: ");
         lCover.setAlignment(Pos.CENTER_LEFT);
         lCover.setMinWidth(wid);
-        ImageView imgView = new ImageView();
-        Label empty = new Label();
-        Image image;
-        if (!book.getCover().equals("null")) {
-            File file = new File(book.getCover());
-            if (file.exists()) {
-                try {
-                    image = new Image(book.getCover());
-                    imgView = new ImageView(image);
-                } catch (Exception e) {
-                    empty.setText("There is no cover photo!");
-                }
-            }else empty.setText("There is no cover photo!");
-        }else {
-            empty.setText("There is no cover photo!");
-        }
-        cover.getChildren().addAll(lCover, empty, imgView);
+        Image image = book.getCover();
+        ImageView imgView = new ImageView(image);
+        Label cvr = new Label("");
+        if (book.getCoverPath().equals("null")) cvr.setText("No Cover Photo!");
+        cover.getChildren().addAll(lCover, cvr, imgView);
 
         HBox cButtons = new HBox(10);
         Button csCancel = new Button("Close");
@@ -626,13 +616,9 @@ public class PresentationLayer extends Application {
         Label lCover = new Label("Cover: ");
         lCover.setAlignment(Pos.CENTER_LEFT);
         lCover.setMinWidth(wid);
-        ImageView imgView = new ImageView();
-        Image image;
-        if (!book.getCover().equals("null")) {
-            image = new Image(book.getCover());
-            imgView = new ImageView(image);
-        }
-        TextField tCover = new TextField(book.getCover());
+        Image image = book.getCover();
+        ImageView imgView = new ImageView(image);
+        TextField tCover = new TextField(book.getCoverPath());
         tCover.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(tCover, Priority.ALWAYS);
         cover.getChildren().addAll(lCover, imgView, tCover);
@@ -703,6 +689,8 @@ public class PresentationLayer extends Application {
         bookmanager.createBook("1234545642", "aras", "firat", "A1",
                 "Translator2", "Publisher", "za", "Fifth Edition",
                 List.of("Tag1", "Tag3"), "4", "Cover Image URL");
+
+
 
 
         bookmanager.listingTags();

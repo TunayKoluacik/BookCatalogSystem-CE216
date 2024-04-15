@@ -173,7 +173,7 @@ if(BookList.get(Long.parseLong(isbn)) == null){
                     bookToUpdate.setRating((String) value);
                     break;
                 case "cover":
-                    bookToUpdate.setCover((String) value);
+                    bookToUpdate.setCoverPath((String) value);
                     break;
 
 

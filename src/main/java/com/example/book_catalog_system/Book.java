@@ -2,12 +2,18 @@ package com.example.book_catalog_system;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class Book{
-    private String isbn, title, subtitle, author, translator, publisher, date, edition, rating, cover;
+    private String isbn, title, subtitle, author, translator, publisher, date, edition, rating, coverPath;
+
+    private Image cover;
 
     private ObservableList<String> tags;
 
@@ -24,10 +30,7 @@ public class Book{
         ObservableList<String> cnvrt = FXCollections.observableList(tags);
         setTags(cnvrt);
         setRating(rating);
-        File f = new File(cover);
-        if (!f.exists()) {
-            setCover("null");
-        } else setCover(cover);
+        setCoverPath(cover);
     }
 
 
@@ -116,11 +119,34 @@ public class Book{
         this.rating = rating;
     }
 
-    public String getCover() {
+    public Image getCover() {
         return cover;
     }
-
-    public void setCover(String cover) {
+    public void setCover(Image cover) {
         this.cover = cover;
+    }
+
+    public void setCoverPath(String s){
+        if (isFile(s)){
+            this.coverPath = s;
+        }else{
+            setCoverPath("null", true);
+        }
+    }
+    public void setCoverPath(String s, boolean b){
+        this.coverPath = "null";
+    }
+
+    private boolean isFile(String s) {
+        try{
+            cover = new Image(s);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public String getCoverPath() {
+        return coverPath;
     }
 }
