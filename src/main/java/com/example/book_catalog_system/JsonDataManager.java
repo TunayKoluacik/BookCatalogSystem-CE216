@@ -213,5 +213,15 @@ public class JsonDataManager {
 
         System.out.println(dir.getAbsolutePath());
         BootingUp();
+
+        bookmanager.SearchBook2("giz");
+        ObservableList<Book> returnedBooks = bookmanager.getSearchResult();
+        for(Book bookItr : returnedBooks){
+            System.out.println(bookItr.getTitle());
+            System.out.println(bookItr.getAuthor());
+            System.out.println(bookItr.getIsbn());
+            System.out.println(bookItr.getTags());
+        }
+
     }
 }
