@@ -88,6 +88,28 @@ if(BookList.get(Long.parseLong(isbn)) == null){
 
 
     }
+    public ObservableList<Book> SearchBook2(String keyword) {
+        searchResult.clear(); // Clear previous search results
+        String lowerCaseKeyword = keyword.toLowerCase(); // Prepare the keyword to avoid repeated conversions
+
+        for (Book book : BookList.values()) {
+            // Directly check each attribute to see if it contains the keyword
+            if (book.getIsbn().toLowerCase().contains(lowerCaseKeyword) ||
+                    book.getTitle().toLowerCase().contains(lowerCaseKeyword) ||
+                    book.getSubtitle().toLowerCase().contains(lowerCaseKeyword) ||
+                    book.getAuthor().toLowerCase().contains(lowerCaseKeyword) ||
+                    book.getTranslator().toLowerCase().contains(lowerCaseKeyword) ||
+                    book.getPublisher().toLowerCase().contains(lowerCaseKeyword) ||
+                    book.getDate().toLowerCase().contains(lowerCaseKeyword) ||
+                    book.getEdition().toLowerCase().contains(lowerCaseKeyword) ||
+                    book.getRating().toLowerCase().contains(lowerCaseKeyword) ||
+                    book.getTags().stream().anyMatch(tag -> tag.toLowerCase().contains(lowerCaseKeyword))) {
+                searchResult.add(book);
+            }
+        }
+        return searchResult;
+    }
+
     public void createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
 
 
