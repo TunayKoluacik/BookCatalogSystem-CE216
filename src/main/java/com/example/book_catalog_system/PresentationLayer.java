@@ -57,7 +57,10 @@ public class PresentationLayer extends Application {
         Text sTitle = new Text("Search Bar ");
         TextField sField = new TextField("Write Here...");
         Button sButton = new Button("Search");
-        sButton.setOnAction(e -> alertNotReady());
+        sButton.setOnAction(e -> {
+            tunay.getItems().clear();
+            tunay.setItems(bookmanager.SearchBook(sField.getText()));
+        });
 
         searchBar.setAlignment(Pos.CENTER);
         searchBar.getChildren().addAll(sTitle, sField, sButton);

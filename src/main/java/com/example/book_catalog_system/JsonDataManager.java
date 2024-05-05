@@ -214,7 +214,7 @@ public class JsonDataManager {
         System.out.println(dir.getAbsolutePath());
         BootingUp();
 
-        bookmanager.SearchBook2("giz");
+        bookmanager.SearchBook("giz");
         ObservableList<Book> returnedBooks = bookmanager.getSearchResult();
         for(Book bookItr : returnedBooks){
             System.out.println(bookItr.getTitle());

@@ -4,7 +4,6 @@ package com.example.book_catalog_system;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.image.Image;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -76,19 +75,7 @@ public class BookManager{
         BookManager.totalTags = tags;
     }
 
-    /* at least client needs to give isbn,title,author,tag
- When we create a book object the create book class automatically put the book in the BookList
- scanner may be used in this function ı need to discuss with my team.
- isFile
- */
-    public Book SearchBook(String isbn){
-if(BookList.get(Long.parseLong(isbn)) == null){
-    throw new NoSuchElementException("Book with ISBN " + isbn + " not found");
-}else return BookList.get(Long.parseLong(isbn));
-
-
-    }
-    public ObservableList<Book> SearchBook2(String keyword) {
+    public ObservableList<Book> SearchBook(String keyword) {
         searchResult.clear(); // Clear previous search results
         String lowerCaseKeyword = keyword.toLowerCase(); // Prepare the keyword to avoid repeated conversions
 
