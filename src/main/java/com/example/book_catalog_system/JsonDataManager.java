@@ -10,6 +10,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 public class JsonDataManager {
@@ -173,55 +175,88 @@ public class JsonDataManager {
         return book;
     }
 
+        public static void zipJsonFilesFolder(String sourceFolder, String zipFilePath) throws IOException {
+            FileOutputStream fs = new FileOutputStream(zipFilePath);
+            ZipOutputStream zipOut = new ZipOutputStream(fs);
+
+            File folder = new File(sourceFolder);
+
+            for (String file : folder.list()) {
+                // Create a FileInputStream for the file
+                FileInputStream fis = new FileInputStream(sourceFolder + File.separator + file);
+
+                ZipEntry zipentry = new ZipEntry(file);
+                    zipOut.putNextEntry(zipentry);
+
+                // Write the contents of the file to the ZipOutputStream
+                byte[] bytes = new byte[1024];
+                int length;
+                while ((length = fis.read(bytes)) >= 0) {
+                    zipOut.write(bytes, 0, length);
+                }
+
+                // Close the FileInputStream
+                fis.close();
+            }
+
+            // Close the ZipOutputStream and FileOutputStream
+            zipOut.close();
+            fs.close();
+        }
+
+
     //lots of unorganized tests......
-    public static void main(String[] args) {
-        //initializing a book to use in the functions
+    public static void main(String[] args) throws IOException {
+
+        zipJsonFilesFolder("/Users/aras/Desktop/BookCatalogSystem-CE216/jsonFiles","/Users/aras/desktop/jsonFiles.zip");
+
+//        initializing a book to use in the functions
         Book aras = new Book("1234567890", "zo", "Subtitle", "Author",
                 "Translator", "Publisher", "za", "First Edition",
                 List.of("Tag1"), "Rating", "Cover Image URL");
 
 
-        // save test
-        //  saveBookToJson(aras);
-        BookManager bookmanager = new BookManager();
-        bookmanager.getBookList().put(1234567890L, aras);
-        bookmanager.editBook("1234567890","author","Tunay");
-        // create test
-        bookmanager.createBook("1234545", "ege", "akın", "A1",
-                "Translator1", "Publisher", "za", "First Edition", List.of("Tag1", "Tag2"), "2", "Cover Image URL");
-        bookmanager.createBook("1234545641", "gizem", "akcay", "A2",
-                "Translator1", "Publisher", "za", "Second Edition",
-                List.of("Tag2", "Tag3"), "3", "Cover Image URL");
-        bookmanager.createBook("1234545642", "aras", "firat", "A1",
-                "Translator2", "Publisher", "za", "Fifth Edition",
-                List.of("Tag1", "Tag3"), "4", "Cover Image URL");
-
-        //bookmanager.deleteBook("1234545640");
-        //
-        // read test
-        Book book = readBooksFromJson("1234567890.json");
-
-        if (book != null) createJSONObject(book);
-
-        createBookFromJSONObject(createJSONObject(aras));
-        // reads correctly as seen
-        TreeMap<Long, Book> test = bookmanager.getBookList();
-
-        System.out.println(test.get(Long.parseLong(aras.getIsbn())).getAuthor());
-        if (book != null) System.out.println(book.getTitle());
-        System.out.println(bookmanager.listingTags());
-
-        System.out.println(dir.getAbsolutePath());
-        BootingUp();
-
-        bookmanager.SearchBook("giz");
-        ObservableList<Book> returnedBooks = bookmanager.getSearchResult();
-        for(Book bookItr : returnedBooks){
-            System.out.println(bookItr.getTitle());
-            System.out.println(bookItr.getAuthor());
-            System.out.println(bookItr.getIsbn());
-            System.out.println(bookItr.getTags());
-        }
+//        // save test
+//        //  saveBookToJson(aras);
+//        BookManager bookmanager = new BookManager();
+//        bookmanager.getBookList().put(1234567890L, aras);
+//        bookmanager.editBook("1234567890","author","Tunay");
+//        // create test
+//        bookmanager.createBook("1234545", "ege", "akın", "A1",
+//                "Translator1", "Publisher", "za", "First Edition", List.of("Tag1", "Tag2"), "2", "Cover Image URL");
+//        bookmanager.createBook("1234545641", "gizem", "akcay", "A2",
+//                "Translator1", "Publisher", "za", "Second Edition",
+//                List.of("Tag2", "Tag3"), "3", "Cover Image URL");
+//        bookmanager.createBook("1234545642", "aras", "firat", "A1",
+//                "Translator2", "Publisher", "za", "Fifth Edition",
+//                List.of("Tag1", "Tag3"), "4", "Cover Image URL");
+//
+//        //bookmanager.deleteBook("1234545640");
+//        //
+//        // read test
+//        Book book = readBooksFromJson("1.json");
+//
+//        if (book != null) createJSONObject(book);
+//
+//        createBookFromJSONObject(createJSONObject(aras));
+//        // reads correctly as seen
+//        TreeMap<Long, Book> test = bookmanager.getBookList();
+//
+//        System.out.println(test.get(Long.parseLong(aras.getIsbn())).getAuthor());
+//        if (book != null) System.out.println(book.getTitle());
+//        System.out.println(bookmanager.listingTags());
+//
+//        System.out.println(dir.getAbsolutePath());
+//        BootingUp();
+//
+//        bookmanager.SearchBook("giz");
+//        ObservableList<Book> returnedBooks = bookmanager.getSearchResult();
+//        for(Book bookItr : returnedBooks){
+//            System.out.println(bookItr.getTitle());
+//            System.out.println(bookItr.getAuthor());
+//            System.out.println(bookItr.getIsbn());
+//            System.out.println(bookItr.getTags());
+//        }
 
     }
 }
