@@ -9,7 +9,6 @@ import org.json.JSONTokener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -203,6 +202,39 @@ public class JsonDataManager {
             zipOut.close();
             fs.close();
         }
+    //imports existing books to our library
+    public static void importJson(String folderName) {
+        File folder = new File(folderName);
+        BookManager bookManager = new BookManager();
+
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile() && file.getName().endsWith(".json")) {
+                        try {
+                            Book importedBook = readBooksFromJson(file.getPath());
+                            if (importedBook != null) {
+                                saveBookToJson(importedBook);// puts the file to our libraries folder
+                                bookManager.getBookList().put(Long.parseLong(importedBook.getIsbn()), importedBook);// bizim json listemize ekliyor
+                                System.out.println("imported    " + importedBook.getTitle());
+
+                            } else {
+                                System.out.println("failed to import " + file.getName());
+                            }
+                        } catch (Exception e) {
+                            System.out.println("error importing " + file.getName());
+
+                        }
+                    }
+                }
+            }
+        } else {
+            System.out.println("Directory does not exist or is not accessible.");
+        }
+    }
+
+
 
 
     //lots of unorganized tests......
@@ -214,6 +246,8 @@ public class JsonDataManager {
         Book aras = new Book("1234567890", "zo", "Subtitle", "Author",
                 "Translator", "Publisher", "za", "First Edition",
                 List.of("Tag1"), "Rating", "Cover Image URL");
+
+        importJson("/Users/aras/Desktop/a");
 
 
 //        // save test
