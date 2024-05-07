@@ -659,6 +659,8 @@ public class PresentationLayer extends Application {
                 csCancel.setText("Close");
             } else progress.setText("ISBN Error");
 
+            imgView.setImage(book.getCover());
+
 
         });
 

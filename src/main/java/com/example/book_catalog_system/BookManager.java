@@ -99,10 +99,6 @@ public class BookManager{
 
     public void createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
 
-
-
-
-
         try {
             FileInputStream inputFile = new FileInputStream(cover);
             BufferedImage image = ImageIO.read(inputFile);

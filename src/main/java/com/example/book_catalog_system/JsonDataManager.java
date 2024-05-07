@@ -240,14 +240,14 @@ public class JsonDataManager {
     //lots of unorganized tests......
     public static void main(String[] args) throws IOException {
 
-        zipJsonFilesFolder("/Users/aras/Desktop/BookCatalogSystem-CE216/jsonFiles","/Users/aras/desktop/jsonFiles.zip");
+        zipJsonFilesFolder("/Users/tunaykoluacik/IdeaProjects/Book_Catalog_System/jsonFiles","jsonFiles.zip");
 
 //        initializing a book to use in the functions
         Book aras = new Book("1234567890", "zo", "Subtitle", "Author",
                 "Translator", "Publisher", "za", "First Edition",
                 List.of("Tag1"), "Rating", "Cover Image URL");
 
-        importJson("/Users/aras/Desktop/a");
+        //importJson("/Users/aras/Desktop/a");
 
 
 //        // save test

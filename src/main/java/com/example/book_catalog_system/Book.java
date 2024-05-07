@@ -130,12 +130,19 @@ public class Book{
     public void setCoverPath(String s){
         if (isFile(s)){
             this.coverPath = s;
+            try {
+                FileInputStream inputFile = new FileInputStream(coverPath);
+                BufferedImage image = ImageIO.read(inputFile);
+
+                File outputFile = new File(JsonDataManager.dir + isbn + ".jpg");
+                ImageIO.write(image, "jpg", outputFile);
+                System.out.println(outputFile);
+            } catch (IOException e) {
+                cover = new Image("def.png");
+            }
         }else{
             setCoverPath("def.png");
         }
-    }
-    public void setCoverPath(String s, boolean b){
-        this.coverPath = "null";
     }
 
     private boolean isFile(String s) {
