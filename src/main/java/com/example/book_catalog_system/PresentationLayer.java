@@ -1,6 +1,7 @@
 package com.example.book_catalog_system;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,11 +17,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class PresentationLayer extends Application {
@@ -43,12 +42,15 @@ public class PresentationLayer extends Application {
         }
     }
     ListView<Book> tunay = new ListView<>();
+
     @Override
     public void start (Stage stage) throws Exception {
 
         VBox mainLayout = new VBox();
 
         tunay.setCellFactory(new BookCellFactory());
+
+        tunay.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         tunay.setItems(bookmanager.OgetBookList());
 
@@ -113,11 +115,11 @@ public class PresentationLayer extends Application {
         });
         Button fDelete = new Button("Delete");
         fDelete.setOnAction(e-> {
-            alertWarn("You are about to delete \"" + tunay.getSelectionModel().getSelectedItem().getTitle() +"\" book. Are you sure?");
-
-            bookmanager.deleteBook(tunay.getSelectionModel().getSelectedItem().getIsbn());
-            tunay.getItems().clear();
-            tunay.setItems(bookmanager.OgetBookList());
+            if ( alertWarn("You are about to delete \"" + tunay.getSelectionModel().getSelectedItem().getTitle() +"\" book. Are you sure?")){
+                bookmanager.deleteBook(tunay.getSelectionModel().getSelectedItem().getIsbn());
+                tunay.getItems().clear();
+                tunay.setItems(bookmanager.OgetBookList());
+            }
         });
 
         footerBar.getChildren().addAll(fShow, fEdit, fDelete);
@@ -173,10 +175,23 @@ public class PresentationLayer extends Application {
         stage.show();
     }
 
-    private void alertWarn(String s) {
+    private boolean alertWarn(String s) {
+        AtomicBoolean cnfrm = new AtomicBoolean(false);
         Alert cnfrmAlert = new Alert(Alert.AlertType.WARNING);
         cnfrmAlert.setContentText(s);
+        ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.LEFT);
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.LEFT);
+        cnfrmAlert.getButtonTypes().clear();
+        cnfrmAlert.getButtonTypes().addAll(yes,no);
+        cnfrmAlert.getDialogPane().lookupButton(yes).addEventFilter(ActionEvent.ACTION, event -> {
+            cnfrm.set(true);
+            cnfrmAlert.close();
+        });
+        cnfrmAlert.getDialogPane().lookupButton(no).addEventFilter(ActionEvent.ACTION, event -> {
+            cnfrmAlert.close();
+        });
         cnfrmAlert.showAndWait();
+        return cnfrm.get();
     }
 
     private void alertNotReady() {
