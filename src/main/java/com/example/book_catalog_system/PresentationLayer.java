@@ -1,6 +1,8 @@
 package com.example.book_catalog_system;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -87,10 +89,35 @@ public class PresentationLayer extends Application {
             checkMenuItem.selectedProperty().addListener((obs, oldVal, newVal) -> updateButtonText(split));
         });
 
-        Button tButton = getButton(split);
+        Button tButton = new Button("Filter");
+        tButton.setOnAction(e -> {
+            String[] selectedItems = split.getItems().stream()
+                    .map(CheckMenuItem.class::cast)
+                    .filter(CheckMenuItem::isSelected)
+                    .map(CheckMenuItem::getText)
+                    .toArray(String[]::new);
+            tunay.getItems().clear();
+            tunay.setItems(bookmanager.filterByTag(List.of(selectedItems)));
+        });
 
         Button stButton = new Button("Search and Filter");
-        stButton.setOnAction(e -> alertNotReady());
+        stButton.setOnAction(e -> {
+            String[] selectedItems = split.getItems().stream()
+                    .map(CheckMenuItem.class::cast)
+                    .filter(CheckMenuItem::isSelected)
+                    .map(CheckMenuItem::getText)
+                    .toArray(String[]::new);
+            tunay.getItems().clear();
+            ObservableList<Book> Flist = bookmanager.filterByTag(List.of(selectedItems));
+            ObservableList<Book> Slist = bookmanager.SearchBook(sField.getText());
+            Set<Book> result = Slist.stream()
+                    .distinct()
+                    .filter(Flist::contains)
+                    .collect(Collectors.toSet());
+            //Flist.clear();
+            Flist = FXCollections.observableArrayList(result);
+            tunay.setItems(FXCollections.observableList(Flist));
+        });
         tagBar.getChildren().addAll(tTitle, split, tButton, stButton);
 
         HBox footerBar = new HBox(10);
@@ -198,20 +225,6 @@ public class PresentationLayer extends Application {
         Alert cnfrmAlert = new Alert(Alert.AlertType.INFORMATION);
         cnfrmAlert.setContentText("This feature is not ready!");
         cnfrmAlert.showAndWait();
-    }
-
-    private Button getButton(SplitMenuButton split) {
-        Button tButton = new Button("Filter");
-        tButton.setOnAction(e -> {
-            String[] selectedItems = split.getItems().stream()
-                    .map(CheckMenuItem.class::cast)
-                    .filter(CheckMenuItem::isSelected)
-                    .map(CheckMenuItem::getText)
-                    .toArray(String[]::new);
-            tunay.getItems().clear();
-            tunay.setItems(bookmanager.filterByTag(List.of(selectedItems)));
-        });
-        return tButton;
     }
 
     private static void renewTags(SplitMenuButton split) {
