@@ -7,7 +7,10 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -36,6 +39,7 @@ public class JsonDataManager {
         } else {
             System.out.println("Directory already exists");
         }
+
     }
 
     public static void saveBookToJson(Book book) {
@@ -72,6 +76,46 @@ public class JsonDataManager {
             System.out.println("Deleted the file: " + myObj.getName());
         } else {
             System.out.println("Failed to delete the file.");
+        }
+    }
+
+    BookManager bookmanager;
+
+    public static void addBooksOnStart(String folderName){
+        File folder = new File(folderName);
+        BookManager bookmanager = new BookManager();
+
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile() && file.getName().endsWith(".json")) {
+                        try {
+
+                            Book book = readBooksFromJson(file.getPath());
+                            JsonDataManager.saveBookToJson(book);
+                            bookmanager.getBookList().put(Long.parseLong(book.getIsbn()), book);
+                            for(String tag : book.getTags()){
+                                if(!bookmanager.getTags().contains(tag)){
+                                    bookmanager.getTags().add(tag);
+                                }
+                            }
+
+
+
+
+
+
+
+                        } catch (Exception e) {
+                            System.out.println("error importing " + file.getName());
+
+                        }
+                    }
+                }
+            }
+        } else {
+            System.out.println("Directory does not exist or is not accessible.");
         }
     }
 
@@ -174,66 +218,32 @@ public class JsonDataManager {
         return book;
     }
 
-        public static void zipJsonFilesFolder(String sourceFolder, String zipFilePath) throws IOException {
+    public static void zipJsonFilesFolder(List<Book> selectedBooks, String zipFilePath) {
+        try {
+            FileOutputStream fos = new FileOutputStream(zipFilePath);
+            ZipOutputStream zipOut = new ZipOutputStream(fos);
 
-            FileOutputStream fs = new FileOutputStream(zipFilePath);
-            ZipOutputStream zipOut = new ZipOutputStream(fs);
-
-            File folder = new File(sourceFolder);
-
-            for (String file : folder.list()) {
-                // Create a FileInputStream for the file
-                FileInputStream fis = new FileInputStream(sourceFolder + File.separator + file);
-
-                ZipEntry zipentry = new ZipEntry(file);
-                    zipOut.putNextEntry(zipentry);
-
-                // Write the contents of the file to the ZipOutputStream
-                byte[] bytes = new byte[1024];
-                int length;
-                while ((length = fis.read(bytes)) >= 0) {
-                    zipOut.write(bytes, 0, length);
+            for (Book selectedBook : selectedBooks) {
+                String title = selectedBook.getTitle();
+                if (title != null && !title.isEmpty()) {
+                    JSONObject jsonObject = createJSONObject(selectedBook);
+                    byte[] bytes = jsonObject.toString().getBytes();
+                    ZipEntry zipEntry = new ZipEntry(title + ".json");
+                    zipOut.putNextEntry(zipEntry);
+                    zipOut.write(bytes, 0, bytes.length);
+                } else {
+                    System.out.println("Title is null or empty for book: " + selectedBook.getTitle());
                 }
-
-                // Close the FileInputStream
-                fis.close();
             }
 
-            // Close the ZipOutputStream and FileOutputStream
             zipOut.close();
-            fs.close();
-        }
-    //imports existing books to our library
-    public static void importJsonFolder(String folderName) {
-        File folder = new File(folderName);
-        BookManager bookManager = new BookManager();
-
-        if (folder.exists() && folder.isDirectory()) {
-            File[] files = folder.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isFile() && file.getName().endsWith(".json")) {
-                        try {
-                            Book importedBook = readBooksFromJson(file.getPath());
-                            if (importedBook != null) {
-                                saveBookToJson(importedBook);// puts the file to our libraries folder
-                                bookManager.getBookList().put(Long.parseLong(importedBook.getIsbn()), importedBook);// bizim json listemize ekliyor
-                                System.out.println("imported    " + importedBook.getTitle());
-
-                            } else {
-                                System.out.println("failed to import " + file.getName());
-                            }
-                        } catch (Exception e) {
-                            System.out.println("error importing " + file.getName());
-
-                        }
-                    }
-                }
-            }
-        } else {
-            System.out.println("Directory does not exist or is not accessible.");
+            fos.close();
+        } catch (IOException e) {
+            // Handle the IOException here
+            e.printStackTrace(); // This prints the exception details to the console
         }
     }
+
 
 
     public static void importJson(String jsonFilePath) {
@@ -262,14 +272,26 @@ public class JsonDataManager {
     //lots of unorganized tests......
     public static void main(String[] args) throws IOException {
 
-        zipJsonFilesFolder("/Users/aras/Desktop/BookCatalogSystem-CE216/jsonFiles","jsonFiles.zip");
+        //zipJsonFilesFolder("/Users/aras/Desktop/BookCatalogSystem-CE216/jsonFiles","jsonFiles.zip");
 
 //        initializing a book to use in the functions
-        Book aras = new Book("1234567890", "zo", "Subtitle", "Author",
-                "Translator", "Publisher", "za", "First Edition",
-                List.of("Tag1"), "Rating", "Cover Image URL");
+       // Book aras = new Book("1234567890", "zo", "Subtitle", "Author",
+       //         "Translator", "Publisher", "za", "First Edition",
+      //          List.of("Tag1"), "Rating", "Cover Image URL");
 
-        importJson("/Users/aras/Desktop/a");
+ //       importJson("/Users/aras/Desktop/a");
+
+        List<Book> books = new ArrayList<>();
+        books.add(new Book("1234567890", "Book1", "Subtitle1", "Author1", "Translator1", "Publisher1", "2024-01-01", "First Edition", List.of("Tag1"), "Rating1", "def.png"));
+        books.add(new Book("2345678901", "Book2", "Subtitle2", "Author2", "Translator2", "Publisher2", "2024-01-02", "Second Edition", List.of("Tag2"), "Rating2", "def.png"));
+
+
+        // Specify the zip file path
+        String zipFilePath = "/Users/aras/Desktop/jsonFiles.zip";
+
+        // Call the method to zip the books
+        zipJsonFilesFolder(books, zipFilePath);
+
 
 
 //        // save test
