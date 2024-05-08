@@ -1,5 +1,5 @@
 # Book Catalog System
-The Book Catalog System is a software application designed to facilitate the management of a collection of books. It provides users with a convenient  inerface to perform various operations such as adding new books, editing existing book information, deleting books, updating book details, and searching for books based on different criteria.
+The Book Catalog System is a software application designed to facilitate the management of a collection of books. It provides users with a convenient  interface to perform various operations such as adding new books, editing existing book information, deleting books, updating book details, and searching for books based on different criteria.
 
  
 ## Table of Contents
