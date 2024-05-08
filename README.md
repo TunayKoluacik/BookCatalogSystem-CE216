@@ -48,9 +48,9 @@ Refer to the user manual or documentation for detailed usage instructions.
 ## Documents
 Links are listed below:
 
-- Design Document : 
-- Task Distribution : 
-- Final Report : 
+- Design Document : https://docs.google.com/document/d/1yuCQub9w3L05FmLxb6GSgsTtGFmx7RAmTrWUhAFYVfY/edit#heading=h.5zo42y56bi7c
+- Task Distribution : https://docs.google.com/spreadsheets/d/1ZgMfsij4H9AfPVqhVqaElv6tL71bxQD-v6EWxi401m0/edit#gid=0
+- Final Report : https://docs.google.com/document/d/17iW4AhmRHoCowTWq2Je481vFmyuRBJ9vOykXHu3Wk6E/edit
 
 ## Contributors
 - Aras Fırat 
