@@ -129,14 +129,20 @@ public class Book{
 
     public void setCoverPath(String s){
         if (isFile(s)){
-            this.coverPath = s;
             try {
-                FileInputStream inputFile = new FileInputStream(coverPath);
-                BufferedImage image = ImageIO.read(inputFile);
+                if (!s.equals("def.png")){ //TODO: Change the condition to check the image folders for already existing images
+                    FileInputStream inputFile = new FileInputStream(s);
+                    BufferedImage image = ImageIO.read(inputFile);
 
-                File outputFile = new File(JsonDataManager.dir + isbn + ".jpg");
-                ImageIO.write(image, "jpg", outputFile);
-                System.out.println(outputFile);
+                    File outputFile = new File(JsonDataManager.dir + isbn + ".jpg");
+                    ImageIO.write(image, "jpg", outputFile);
+                    this.coverPath = outputFile.getPath();
+                    System.out.println(outputFile);
+                }
+
+                System.out.println("already exists");
+
+
             } catch (IOException e) {
                 cover = new Image("def.png");
             }

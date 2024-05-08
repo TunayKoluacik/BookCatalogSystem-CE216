@@ -99,16 +99,16 @@ public class BookManager{
 
     public void createBook(String isbn, String title, String subtitle, String author, String translator, String publisher, String date, String edition, List<String> tags, String rating, String cover) {
 
-        try {
-            FileInputStream inputFile = new FileInputStream(cover);
-            BufferedImage image = ImageIO.read(inputFile);
-
-            File outputFile = new File(JsonDataManager.dir + isbn + ".jpg");
-            ImageIO.write(image, "jpg", outputFile);
-            System.out.println(outputFile);
-        } catch (IOException e) {
-            cover = "null";
-        }
+//        try {
+//            FileInputStream inputFile = new FileInputStream(cover);
+//            BufferedImage image = ImageIO.read(inputFile);
+//
+//            File outputFile = new File(JsonDataManager.dir + isbn + ".jpg");
+//            ImageIO.write(image, "jpg", outputFile);
+//            System.out.println(outputFile);
+//        } catch (IOException e) {
+//            cover = "null";
+//        }
 
 
 

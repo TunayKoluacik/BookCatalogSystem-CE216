@@ -120,6 +120,11 @@ public class PresentationLayer extends Application {
         });
         tagBar.getChildren().addAll(tTitle, split, tButton, stButton);
 
+        Text orders = new Text();
+        orders.setVisible(false);
+
+        HBox footers = new HBox(10);
+
         HBox footerBar = new HBox(10);
         Button fShow = new Button("Show Details");
         fShow.setOnAction(e -> {
@@ -149,11 +154,35 @@ public class PresentationLayer extends Application {
             }
         });
 
+        HBox footerBar2 = new HBox(10);
+        footerBar2.setVisible(false);
+        HBox.setHgrow(footerBar2, Priority.ALWAYS);
+
+        Button fExport = new Button("Export");
+        fExport.setOnAction(e -> {
+            //TODO: get selected items
+            //TODO: Choose a directory
+            //TODO: Connect export function
+        });
+
+        Button fExCancel = new Button("Cancel");
+        fExCancel.setOnAction(e -> {
+            footerBar.setVisible(true);
+            footerBar2.setVisible(false);
+        });
+
         footerBar.getChildren().addAll(fShow, fEdit, fDelete);
         footerBar.setAlignment(Pos.CENTER_RIGHT);
         footerBar.setPadding(new Insets(10));
 
+        footerBar2.getChildren().addAll(fExport, fExCancel);
+        footerBar2.setAlignment(Pos.CENTER_LEFT);
+        footerBar2.setPadding(new Insets(10));
+
         mainLayout.setAlignment(Pos.TOP_CENTER);
+
+        footers.getChildren().setAll(footerBar2, footerBar);
+        HBox.setHgrow(footers, Priority.ALWAYS);
 
         MenuBar menu = new MenuBar();
         Menu mFile = new Menu("File");
@@ -179,13 +208,21 @@ public class PresentationLayer extends Application {
         MenuItem mImport = new MenuItem("Import");
         mImport.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
         mImport.setOnAction(e -> {
-            //TODO: Write "not available popup or tooltip"
+            //TODO: File chooser multiple (only json files)
+            //TODO: Connect the import func
         });
 
         MenuItem mExport = new MenuItem("Export");
         mExport.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
+        mExport.setOnAction(e -> {
+            footerBar.setVisible(false);
+            footerBar2.setVisible(true);
+            orders.setVisible(true);
+            orders.setText("Choose books to export with CTRL+Click (on Windows) or Command+Click (on Mac)");
+        });
 
         MenuItem mAbout = new MenuItem("About");
+        //TODO: if you have time add a credits page.
         MenuItem mManuel = new MenuItem("Manuel");
 
         mFile.getItems().addAll(mCreate, mImport, mExport); // add menuitems to file menu
@@ -195,7 +232,8 @@ public class PresentationLayer extends Application {
 
         VBox.setVgrow(tunay, Priority.ALWAYS);
 
-        mainLayout.getChildren().addAll(menu, searchBar, tagBar, tunay, footerBar);
+
+        mainLayout.getChildren().addAll(menu, searchBar, tagBar, orders, tunay, footers);
         Scene tst = new Scene(mainLayout, 600, 600);
         stage.setTitle("Book Catalog System: Group 9");
         stage.setScene(tst);
@@ -219,12 +257,6 @@ public class PresentationLayer extends Application {
         });
         cnfrmAlert.showAndWait();
         return cnfrm.get();
-    }
-
-    private void alertNotReady() {
-        Alert cnfrmAlert = new Alert(Alert.AlertType.INFORMATION);
-        cnfrmAlert.setContentText("This feature is not ready!");
-        cnfrmAlert.showAndWait();
     }
 
     private static void renewTags(SplitMenuButton split) {
@@ -730,7 +762,7 @@ public class PresentationLayer extends Application {
                 List.of("Tag2", "Tag3"), "3", "Cover Image URL");
         bookmanager.createBook("1234545642", "aras", "firat", "A1",
                 "Translator2", "Publisher", "za", "Fifth Edition",
-                List.of("Tag1", "Tag3"), "4", "Cover Image URL");
+                List.of("Tag1", "Tag3"), "4", "def.png");
 
 
 
