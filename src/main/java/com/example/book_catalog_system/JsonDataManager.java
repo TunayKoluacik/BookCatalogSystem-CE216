@@ -203,7 +203,7 @@ public class JsonDataManager {
             fs.close();
         }
     //imports existing books to our library
-    public static void importJson(String folderName) {
+    public static void importJsonFolder(String folderName) {
         File folder = new File(folderName);
         BookManager bookManager = new BookManager();
 
@@ -235,19 +235,40 @@ public class JsonDataManager {
     }
 
 
+    public static void importJson(String jsonFilePath) {
+        File jsonFile = new File(jsonFilePath);
+        BookManager bookManager = new BookManager();
 
+        if (jsonFile.exists() && jsonFile.isFile() && jsonFile.getName().endsWith(".json")) {
+            try {
+                Book importedBook = readBooksFromJson(jsonFile.getPath());
+                if (importedBook != null) {
+                    saveBookToJson(importedBook); // puts the file to our libraries folder
+                    bookManager.getBookList().put(Long.parseLong(importedBook.getIsbn()), importedBook); // bizim json listemize ekliyor
+                    System.out.println("Imported: " + importedBook.getTitle());
+                } else {
+                    System.out.println("Failed to import: " + jsonFile.getName());
+                }
+            } catch (Exception e) {
+                System.out.println("Error importing: " + jsonFile.getName());
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Invalid JSON file: " + jsonFile.getName());
+        }
+    }
 
     //lots of unorganized tests......
     public static void main(String[] args) throws IOException {
 
-        zipJsonFilesFolder("/Users/tunaykoluacik/IdeaProjects/Book_Catalog_System/jsonFiles","jsonFiles.zip");
+        zipJsonFilesFolder("/Users/aras/Desktop/BookCatalogSystem-CE216/jsonFiles","jsonFiles.zip");
 
 //        initializing a book to use in the functions
         Book aras = new Book("1234567890", "zo", "Subtitle", "Author",
                 "Translator", "Publisher", "za", "First Edition",
                 List.of("Tag1"), "Rating", "Cover Image URL");
 
-        //importJson("/Users/aras/Desktop/a");
+        importJson("/Users/aras/Desktop/a");
 
 
 //        // save test
