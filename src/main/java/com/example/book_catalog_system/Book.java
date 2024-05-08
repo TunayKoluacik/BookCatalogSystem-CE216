@@ -138,6 +138,7 @@ public class Book{
                     ImageIO.write(image, "jpg", outputFile);
                     this.coverPath = outputFile.getPath();
                     System.out.println(outputFile);
+                    inputFile.close();
                 }
 
                 System.out.println("already exists");
@@ -155,6 +156,7 @@ public class Book{
         try{
             FileInputStream fis = new FileInputStream(s);
             cover = new Image(fis);
+            fis.close();
         } catch (Exception e) {
             return false;
         }
