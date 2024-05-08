@@ -388,7 +388,7 @@ public class PresentationLayer extends Application {
         imgView.setFitWidth(200);
         imgView.setFitHeight(200);
         Label cvr = new Label("");
-        if (book.getCoverPath().equals("null")) cvr.setText("No Cover Photo!");
+        if (book.getCoverPath() == null) cvr.setText("No Cover Photo!");
         cover.getChildren().addAll(lCover, cvr, imgView);
 
         HBox cButtons = new HBox(10);
