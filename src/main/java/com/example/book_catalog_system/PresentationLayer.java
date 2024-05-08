@@ -169,6 +169,8 @@ public class PresentationLayer extends Application {
             File selectedDirectory = directoryChooser.showDialog(stage);
             if (selectedDirectory != null) {
                 System.out.println("Selected directory: " + selectedDirectory.getAbsolutePath());
+                //TODO Fix the JSON export
+                JsonDataManager.zipJsonFilesFolder(selectedBooks ,selectedDirectory.getAbsolutePath());
             } else {
                 System.out.println("No directory selected.");
             }
