@@ -145,7 +145,7 @@ public class Book{
 
 
             } catch (IOException e) {
-                cover = new Image("def.png");
+                cover = new Image("file:def.png");
             }
         }else{
             setCoverPath("def.png");
