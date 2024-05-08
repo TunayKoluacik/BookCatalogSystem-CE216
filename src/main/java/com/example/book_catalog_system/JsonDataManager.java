@@ -175,6 +175,7 @@ public class JsonDataManager {
     }
 
         public static void zipJsonFilesFolder(String sourceFolder, String zipFilePath) throws IOException {
+
             FileOutputStream fs = new FileOutputStream(zipFilePath);
             ZipOutputStream zipOut = new ZipOutputStream(fs);
 
