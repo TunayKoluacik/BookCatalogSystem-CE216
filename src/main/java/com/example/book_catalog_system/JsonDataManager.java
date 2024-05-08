@@ -23,15 +23,17 @@ public class JsonDataManager {
     static File dir = new File("./jsonFiles");
 
     public JsonDataManager() {
+
         BootingUp();
+
     }
 
-    public static void BootingUp(){
+    public static void BootingUp() {
         if (!dir.exists()) {
             // Create the directory
             boolean result = dir.mkdir();
 
-            if(result) {
+            if (result) {
                 System.out.println("Directory created successfully");
             } else {
                 System.out.println("Failed to create directory");
@@ -43,8 +45,8 @@ public class JsonDataManager {
     }
 
     public static void saveBookToJson(Book book) {
-        String filename=  book.getIsbn();
-        filename = dir +"/"+ filename + ".json";
+        String filename = book.getIsbn();
+        filename = dir + "/" + filename + ".json";
 
         try (Writer writer = new FileWriter(filename)) {
             JSONObject jsonObject = new JSONObject();
@@ -68,9 +70,10 @@ public class JsonDataManager {
 
         }
     }
+
     //Simply deletes the given file
-    public static void deleteJson(String filename){
-        filename = dir +"/"+ filename + ".json";
+    public static void deleteJson(String filename) {
+        filename = dir + "/" + filename + ".json";
         File myObj = new File(filename);
         if (myObj.delete()) {
             System.out.println("Deleted the file: " + myObj.getName());
@@ -81,9 +84,9 @@ public class JsonDataManager {
 
     BookManager bookmanager;
 
-    public static void addBooksOnStart(String folderName){
+    public static void addBooksOnStart(String folderName) {
         File folder = new File(folderName);
-        BookManager bookmanager = new BookManager();
+        BookManager bookmanager = PresentationLayer.bookmanager;
 
         if (folder.exists() && folder.isDirectory()) {
             File[] files = folder.listFiles();
@@ -95,17 +98,11 @@ public class JsonDataManager {
                             Book book = readBooksFromJson(file.getPath());
                             JsonDataManager.saveBookToJson(book);
                             bookmanager.getBookList().put(Long.parseLong(book.getIsbn()), book);
-                            for(String tag : book.getTags()){
-                                if(!bookmanager.getTags().contains(tag)){
+                            for (String tag : book.getTags()) {
+                                if (!bookmanager.getTags().contains(tag)) {
                                     bookmanager.getTags().add(tag);
                                 }
                             }
-
-
-
-
-
-
 
                         } catch (Exception e) {
                             System.out.println("error importing " + file.getName());
@@ -149,34 +146,6 @@ public class JsonDataManager {
         return null;
     }
 
-    // Export a single book to a JSON file
-//    public static void exportBookToJson(Book book) {
-//
-//        String filename=  book.getIsbn();
-//        filename+= ".json";
-//
-//        try (Writer writer = new FileWriter(filename)) {
-//            JSONObject jsonObject = createJSONObject(book);
-//            writer.write(jsonObject.toString());
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.out.println("Failed export from json" + filename);
-//        }
-//    }
-//
-//    // Import a single book from a JSON file
-//    public static Book importBookFromJson(String filename) {
-//
-//        try (Reader reader = new FileReader(filename)) {
-//            JSONObject jsonObject = new JSONObject(new JSONTokener(reader));
-//            return createBookFromJSONObject(jsonObject);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.out.println("Failed import from book" + filename);
-//        }
-//        return null;
-//    }
 
     // creates a json with the book object
     private static JSONObject createJSONObject(Book book) {
@@ -239,11 +208,9 @@ public class JsonDataManager {
             zipOut.close();
             fos.close();
         } catch (IOException e) {
-            // Handle the IOException here
-            e.printStackTrace(); // This prints the exception details to the console
+            e.printStackTrace();
         }
     }
-
 
 
     public static void importJson(String jsonFilePath) {
@@ -269,72 +236,4 @@ public class JsonDataManager {
         }
     }
 
-    //lots of unorganized tests......
-    public static void main(String[] args) throws IOException {
-
-        //zipJsonFilesFolder("/Users/aras/Desktop/BookCatalogSystem-CE216/jsonFiles","jsonFiles.zip");
-
-//        initializing a book to use in the functions
-        // Book aras = new Book("1234567890", "zo", "Subtitle", "Author",
-        //         "Translator", "Publisher", "za", "First Edition",
-        //          List.of("Tag1"), "Rating", "Cover Image URL");
-
-        //       importJson("/Users/aras/Desktop/a");
-
-        List<Book> books = new ArrayList<>();
-        books.add(new Book("1234567890", "Book1", "Subtitle1", "Author1", "Translator1", "Publisher1", "2024-01-01", "First Edition", List.of("Tag1"), "Rating1", "def.png"));
-        books.add(new Book("2345678901", "Book2", "Subtitle2", "Author2", "Translator2", "Publisher2", "2024-01-02", "Second Edition", List.of("Tag2"), "Rating2", "def.png"));
-
-
-        // Specify the zip file path
-        String zipFilePath = "/Users/aras/Desktop/jsonFiles.zip";
-
-        // Call the method to zip the books
-        zipJsonFilesFolder(books, zipFilePath);
-
-
-
-//        // save test
-//        //  saveBookToJson(aras);
-//        BookManager bookmanager = new BookManager();
-//        bookmanager.getBookList().put(1234567890L, aras);
-//        bookmanager.editBook("1234567890","author","Tunay");
-//        // create test
-//        bookmanager.createBook("1234545", "ege", "akın", "A1",
-//                "Translator1", "Publisher", "za", "First Edition", List.of("Tag1", "Tag2"), "2", "Cover Image URL");
-//        bookmanager.createBook("1234545641", "gizem", "akcay", "A2",
-//                "Translator1", "Publisher", "za", "Second Edition",
-//                List.of("Tag2", "Tag3"), "3", "Cover Image URL");
-//        bookmanager.createBook("1234545642", "aras", "firat", "A1",
-//                "Translator2", "Publisher", "za", "Fifth Edition",
-//                List.of("Tag1", "Tag3"), "4", "Cover Image URL");
-//
-//        //bookmanager.deleteBook("1234545640");
-//        //
-//        // read test
-//        Book book = readBooksFromJson("1.json");
-//
-//        if (book != null) createJSONObject(book);
-//
-//        createBookFromJSONObject(createJSONObject(aras));
-//        // reads correctly as seen
-//        TreeMap<Long, Book> test = bookmanager.getBookList();
-//
-//        System.out.println(test.get(Long.parseLong(aras.getIsbn())).getAuthor());
-//        if (book != null) System.out.println(book.getTitle());
-//        System.out.println(bookmanager.listingTags());
-//
-//        System.out.println(dir.getAbsolutePath());
-//        BootingUp();
-//
-//        bookmanager.SearchBook("giz");
-//        ObservableList<Book> returnedBooks = bookmanager.getSearchResult();
-//        for(Book bookItr : returnedBooks){
-//            System.out.println(bookItr.getTitle());
-//            System.out.println(bookItr.getAuthor());
-//            System.out.println(bookItr.getIsbn());
-//            System.out.println(bookItr.getTags());
-//        }
-
-    }
 }

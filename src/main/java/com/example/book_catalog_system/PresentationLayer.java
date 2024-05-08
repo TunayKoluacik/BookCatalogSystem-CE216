@@ -845,18 +845,10 @@ public class PresentationLayer extends Application {
 
     public static void main (String[]args){
 
-        bookmanager.createBook("1234545640", "ege", "akın", "A1",
-                "Translator1", "Publisher", "za", "First Edition", List.of("Tag1", "Tag2"), "2", "Cover Image URL");
-        bookmanager.createBook("1234545641", "gizem", "akcay", "A2",
-                "Translator1", "Publisher", "za", "Second Edition",
-                List.of("Tag2", "Tag3"), "3", "Cover Image URL");
-        bookmanager.createBook("1234545642", "aras", "firat", "A1",
-                "Translator2", "Publisher", "za", "Fifth Edition",
-                List.of("Tag1", "Tag3"), "4", "def.png");
 
 
 
-
+        JsonDataManager.addBooksOnStart("jsonFiles");
         bookmanager.listingTags();
         launch();
     }

@@ -141,7 +141,6 @@ public class Book{
                     inputFile.close();
                 }
 
-                System.out.println("already exists");
 
 
             } catch (IOException e) {
