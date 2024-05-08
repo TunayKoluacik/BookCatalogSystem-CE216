@@ -16,9 +16,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -161,6 +164,14 @@ public class PresentationLayer extends Application {
         Button fExport = new Button("Export");
         fExport.setOnAction(e -> {
             //TODO: get selected items
+            List<Book> selectedBooks= FXCollections.observableList(tunay.getSelectionModel().getSelectedItems());
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            File selectedDirectory = directoryChooser.showDialog(stage);
+            if (selectedDirectory != null) {
+                System.out.println("Selected directory: " + selectedDirectory.getAbsolutePath());
+            } else {
+                System.out.println("No directory selected.");
+            }
             //TODO: Choose a directory
             //TODO: Connect export function
         });
@@ -208,8 +219,26 @@ public class PresentationLayer extends Application {
         MenuItem mImport = new MenuItem("Import");
         mImport.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
         mImport.setOnAction(e -> {
-            //TODO: File chooser multiple (only json files)
-            //TODO: Connect the import func
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Choose JSON Files");
+
+            // Set the initial directory (optional)
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+            // Add a filter for JSON files
+            FileChooser.ExtensionFilter jsonFilter = new FileChooser.ExtensionFilter("JSON Files", "*.json");
+            fileChooser.getExtensionFilters().add(jsonFilter);
+
+            // Allow multiple file selections
+            List<File> selectedFiles = fileChooser.showOpenMultipleDialog(stage);
+            if (selectedFiles != null && !selectedFiles.isEmpty()) {
+                System.out.println("Selected JSON files:");
+                for (File file : selectedFiles) {
+                    JsonDataManager.importJson(file.getAbsolutePath());
+                }
+            } else {
+                System.out.println("No files selected.");
+            }
         });
 
         MenuItem mExport = new MenuItem("Export");
@@ -378,7 +407,6 @@ public class PresentationLayer extends Application {
         HBox.setHgrow(tRating, Priority.ALWAYS);
         rating.getChildren().addAll(lRating, tRating);
 
-        //TODO Fix cover to show Images abd fix the edit and create functions
         HBox cover = new HBox(10);
         Label lCover = new Label("Cover: ");
         lCover.setAlignment(Pos.CENTER_LEFT);
@@ -682,7 +710,6 @@ public class PresentationLayer extends Application {
         rating.getChildren().addAll(lRating, tRating);
 
         HBox cover = new HBox(10);
-        //TODO Show the image as well
         Label lCover = new Label("Cover: ");
         lCover.setAlignment(Pos.CENTER_LEFT);
         lCover.setMinWidth(wid);
