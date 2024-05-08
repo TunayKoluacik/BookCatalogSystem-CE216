@@ -21,6 +21,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -170,7 +171,13 @@ public class PresentationLayer extends Application {
             if (selectedDirectory != null) {
                 System.out.println("Selected directory: " + selectedDirectory.getAbsolutePath());
                 //TODO Fix the JSON export
-                JsonDataManager.zipJsonFilesFolder(selectedBooks ,selectedDirectory.getAbsolutePath());
+                String selectPAth = selectedDirectory.getAbsolutePath().concat("/jsonFiles.zip");
+                JsonDataManager.zipJsonFilesFolder(selectedBooks ,selectPAth);
+                tunay.getItems().clear();
+                tunay.setItems(bookmanager.OgetBookList());
+                footerBar.setVisible(true);
+                orders.setVisible(false);
+                footerBar2.setVisible(false);
             } else {
                 System.out.println("No directory selected.");
             }
@@ -181,6 +188,7 @@ public class PresentationLayer extends Application {
         Button fExCancel = new Button("Cancel");
         fExCancel.setOnAction(e -> {
             footerBar.setVisible(true);
+            orders.setVisible(false);
             footerBar2.setVisible(false);
         });
 
@@ -202,6 +210,10 @@ public class PresentationLayer extends Application {
 
 
         Menu mHelp = new Menu("Help");
+        mHelp.setOnAction(event -> HelpWindow());
+
+
+
         //TODO: Help Menu
 
 
@@ -236,11 +248,14 @@ public class PresentationLayer extends Application {
             if (selectedFiles != null && !selectedFiles.isEmpty()) {
                 System.out.println("Selected JSON files:");
                 for (File file : selectedFiles) {
+                    System.out.println(file.getAbsolutePath());
                     JsonDataManager.importJson(file.getAbsolutePath());
                 }
             } else {
                 System.out.println("No files selected.");
             }
+            tunay.getItems().clear();
+            tunay.setItems(bookmanager.OgetBookList());
         });
 
         MenuItem mExport = new MenuItem("Export");
@@ -770,6 +785,54 @@ public class PresentationLayer extends Application {
         Scene createScene = new Scene(vertical, 500, 700);
         editStage.setScene(createScene);
         editStage.showAndWait();
+    }
+
+    private void HelpWindow() {
+        // Create a new stage (window)
+        Stage newStage = new Stage();
+        newStage.setTitle("Help Manual");
+
+        // Create a layout for the new window
+
+
+        VBox help = new VBox(10);
+
+        Label title = new Label("Book Catalog System");
+        title.setWrapText(true);
+
+        Label para1 = new Label("This guide is here to help you with the key features of the program, including the processes for creating, importing, exporting, searching, and managing book information.\n" );
+        para1.setWrapText(true);
+
+        Label sub1= new Label("File Operations\n");
+        sub1.setWrapText(true);
+        Label para2 = new Label("Create: To create a new book entry, click on the 'Create' option under the 'File' menu. You will be prompted to enter details such as title, subtitle, authors, translators, ISBN, publisher, publication date, edition, cover image file path, language, rating, and tags. Please note that an ISBN is mandatory for creating a book record. For the cover image, input the file path, and the image will be uploaded automatically.\n\n" +
+                "Import: Select 'Import' to load book data from an existing JSON file. Navigate to the desired file path, choose the JSON file, and the program will import all the contained book information.\n\n" +
+                "Export: Use the 'Export' function to save the current database of books into a JSON file. This option is available under the 'File' menu and facilitates easy data sharing and backup.\n\n");
+        para2.setWrapText(true);
+        Label sub2 = new Label("Searching and Filtering\n");
+        sub2.setWrapText(true);
+
+        Label para3 = new Label("Basic Search: The search functionality allows you to find books by entering keywords, such as an ISBN number or author name. After clicking 'Search', relevant results will display in the output box below. This search is comprehensive and scans all book attributes, meaning a query for 'Love' might return books with 'Love' in the title, author name, or publisher.\n\n" +
+                "Tag Filtering: Beneath the search field, a dropdown menu displays all available tags. You can select one or multiple tags and then click 'Filter' to refine your search results to include only the books associated with the selected tags. If multiple tags are selected, the program will display books that include all chosen tags.\n\n" +
+                "Combined Search and Filter: To perform a more specific search, you can combine keyword searches with tag filters. After entering a keyword in the search bar and selecting desired tags, click the 'Search and Filter' button. This will display books that match both the keyword and the tag criteria.\n\n" );
+        para3.setWrapText(true);
+        Label sub3 = new Label("Book Details and Management\n");
+        sub3.setWrapText(true);
+        Label para4 = new Label("Show Details: By selecting a book and clicking the 'Show Details' button located at the bottom-right of the interface, you can view all the detailed information about the selected book.\n\n" +
+                "Edit: To modify the details of a book, select the book, click the 'Edit' button at the bottom-right, and make the necessary changes in the pop-up window that appears.\n\n" +
+                "Delete: To remove a book from the database, select the desired book, click the 'Delete' button, and confirm your decision when prompted by the warning message.\n\n");
+        para4.setWrapText(true);
+        Label son = new Label("This documentation aims to provide clear guidance on using all the features of the Book Catalog System effectively. By following these instructions, we hope you can manage your book hoard, we mean collection.\n");
+        son.setWrapText(true);
+        help.getChildren().addAll(title, para1, sub1, para2, sub2, para3, sub3, para4);
+
+
+        Scene newScene = new Scene(help, 600, 700);
+        // Set the scene for the new stage
+        newStage.setScene(newScene);
+
+        // Show the new stage
+        newStage.show();
     }
 
     public boolean isLong(String str) {

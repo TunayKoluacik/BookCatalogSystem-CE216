@@ -248,7 +248,7 @@ public class JsonDataManager {
 
     public static void importJson(String jsonFilePath) {
         File jsonFile = new File(jsonFilePath);
-        BookManager bookManager = new BookManager();
+        BookManager bookManager = PresentationLayer.bookmanager;
 
         if (jsonFile.exists() && jsonFile.isFile() && jsonFile.getName().endsWith(".json")) {
             try {
@@ -275,11 +275,11 @@ public class JsonDataManager {
         //zipJsonFilesFolder("/Users/aras/Desktop/BookCatalogSystem-CE216/jsonFiles","jsonFiles.zip");
 
 //        initializing a book to use in the functions
-       // Book aras = new Book("1234567890", "zo", "Subtitle", "Author",
-       //         "Translator", "Publisher", "za", "First Edition",
-      //          List.of("Tag1"), "Rating", "Cover Image URL");
+        // Book aras = new Book("1234567890", "zo", "Subtitle", "Author",
+        //         "Translator", "Publisher", "za", "First Edition",
+        //          List.of("Tag1"), "Rating", "Cover Image URL");
 
- //       importJson("/Users/aras/Desktop/a");
+        //       importJson("/Users/aras/Desktop/a");
 
         List<Book> books = new ArrayList<>();
         books.add(new Book("1234567890", "Book1", "Subtitle1", "Author1", "Translator1", "Publisher1", "2024-01-01", "First Edition", List.of("Tag1"), "Rating1", "def.png"));

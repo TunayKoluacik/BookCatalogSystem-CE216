@@ -34,6 +34,8 @@ public class BookManager{
         BookList = bookList;
     }
 
+    public void addtoBooklist(Book k){ BookList.put(Long.valueOf(k.getIsbn()), k );}
+
     public ObservableList<Book> getSearchResult() {
         return searchResult;
     }
