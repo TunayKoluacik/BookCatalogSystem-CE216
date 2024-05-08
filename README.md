@@ -3,12 +3,12 @@ The Book Catalog System is a software application designed to facilitate the man
 
  
 ## Table of Contents
-### Overview
-### Features
-### Installation
-### Usage
-### Documents
-### Contributors
+- Overview
+- Features
+- Installation
+- Usage
+- Documents
+- Contributors
 
 ## Overview
 The purpose of the Book Catalog System is to streamline the process of orga-
@@ -17,13 +17,13 @@ format, users can efficiently manage their book collections, and retrieve infor-
 mation as needed.
 
 ## Features
-Crud operations for books.
-Search intended book.
-import and export Json files.
-The software provides a tag system for books.
-Crud operations for Json files.
-Error handling and informative messages for easier troubleshooting.
-Integration with external libraries, such as jsr353 for JSON serialization/deserialization.
+- Crud operations for books.
+- Search intended book.
+- import and export Json files.
+- The software provides a tag system for books.
+- Crud operations for Json files.
+- Error handling and informative messages for easier troubleshooting.
+- Integration with external libraries, such as jsr353 for JSON serialization/deserialization.
 
 ## Installation
 To install:
@@ -48,15 +48,15 @@ Refer to the user manual or documentation for detailed usage instructions.
 ## Documents
 Links are listed below:
 
-Design Document : 
-Task Distribution : 
-Final Report : 
+- Design Document : 
+- Task Distribution : 
+- Final Report : 
 
 ## Contributors
-Aras Fırat 
-Hüseyin Ege Akın
-Tunay koluaçık
-Gizem Akçay
+- Aras Fırat 
+- Hüseyin Ege Akın
+- Tunay koluaçık
+- Gizem Akçay
 
 
 
