@@ -267,12 +267,10 @@ public class PresentationLayer extends Application {
             orders.setText("Choose books to export with CTRL+Click (on Windows) or Command+Click (on Mac)");
         });
 
-        MenuItem mAbout = new MenuItem("About");
-        //TODO: if you have time add a credits page.
         MenuItem mManuel = new MenuItem("Manuel");
 
         mFile.getItems().addAll(mCreate, mImport, mExport); // add menuitems to file menu
-        mHelp.getItems().addAll(mAbout, mManuel);
+        mHelp.getItems().addAll(mManuel);
 
         menu.getMenus().addAll(mFile, mHelp); // add menus to menubar
 
