@@ -17,16 +17,13 @@ ext {
     junitVersion = '5.10.0'
 }
 
-sourceCompatibility = '17'
-targetCompatibility = '17'
-
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
 application {
     mainModule = 'com.example.book_catalog_system'
-    mainClass = 'com.example.book_catalog_system.HelloApplication'
+    mainClass = 'com.example.book_catalog_system.Main'
 }
 
 javafx {
